@@ -22,7 +22,7 @@ taskForm.addEventListener('submit', (e) => {
     taskList.push(taskObject); // pushing a variable to the global array
     renderBoard(); // call to render
     taskInput.value = '';
-    
+    updateGlobalMetrics(); // update the global metrics
     console.log(taskList);
 });
 
@@ -43,11 +43,22 @@ function renderBoard() { // function declaration
         deleteBtn.addEventListener('click', () => {
             taskList = taskList.filter(taskItem => taskItem.id !== task.id); //remove task from the array
             renderBoard(); // re-render :)
-        })
+            updateGlobalMetrics();
+        });
         card.appendChild(deleteBtn);
+
+        card.style.setProperty('--card-weight', task.weight); 
 
         gravityBoard.appendChild(card);
     });
 }
 
 renderBoard(); // clear any placeholder
+
+function updateGlobalMetrics() {
+    let totalScore = 0;
+    taskList.forEach(task => {
+        totalScore += task.weight;
+    });
+    scoreNum.textContent = totalScore;
+}

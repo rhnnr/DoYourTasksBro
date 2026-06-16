@@ -1,4 +1,4 @@
-*
+*, *::before, *::after
 {
     margin: 0;
     padding: 0;
@@ -10,5 +10,15 @@
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+    padding: 20px;
+    width: 100%;
     min-height: 70vh;
+}
+
+.card
+{
+    width: calc(140px + (var(--card-weight) * 3px));
+    min-height: calc(80px + (var(--card-weight) * 2px));
+    font-size: calc(0.9rem + (var(--card-weight) * 0.01rem));
+    padding: calc(10px + (var(--card-weight) * 0.5px));
 }
