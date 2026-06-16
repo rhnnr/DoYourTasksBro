@@ -15,12 +15,154 @@
     min-height: 70vh;
 }
 
+#app-container
+{
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 20px;
+}
+
+#control-panel 
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+#load-status 
+{
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+}
+
+#score-number 
+{
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-left: 5px;
+}
+
+#task-form 
+{
+    display: flex;
+    width: 100%;
+    max-width: 500px;
+    gap: 10px;
+}
+
+#task-input 
+{
+    flex: 1;
+    padding: 14px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: inherit;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#task-input:focus 
+{
+    border-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+#task-form button 
+{
+    padding: 14px 24px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 8px;
+    border: none;
+    background-color: #ffffff;
+    color: #0f172a;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#task-form button:hover 
+{
+    transform: translateY(-1px);
+    opacity: 0.9;
+}
+
+#task-form button:active 
+{
+    transform: translateY(1px);
+}
+
 .card
 {
     width: calc(140px + (var(--card-weight) * 3px));
     min-height: calc(80px + (var(--card-weight) * 2px));
     font-size: calc(0.9rem + (var(--card-weight) * 0.01rem));
     padding: calc(10px + (var(--card-weight) * 0.5px));
+
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 8px;
+    gap: 10px;
+}
+
+.card:hover
+{
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+}
+
+.card p
+{
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.delete-btn
+{
+    align-self: flex-end;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.delete-btn:hover
+{
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+h1 
+{
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    margin-bottom: 10px;
+}
+
+body
+{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40px;
 }
 
 body.theme-safe 
