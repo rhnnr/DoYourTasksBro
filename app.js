@@ -1,4 +1,7 @@
-let taskList; // the global array
+let taskList = []; // the global array
+
+const warningThreshold = 150;
+const overloadThreshold = 300;
 
 const savedData = localStorage.getItem('doyourtasksbro_data');
 
@@ -75,10 +78,10 @@ function updateGlobalMetrics() {
     });
     scoreNum.textContent = totalScore;
 
-    if (totalScore < 50) {
+    if (totalScore < warningThreshold) {
         document.body.classList.remove('theme-warning', 'theme-overload');
         document.body.classList.add('theme-safe');
-    } else if (totalScore >= 50 && totalScore < 80) {
+    } else if (totalScore >= warningThreshold && totalScore < overloadThreshold) {
         document.body.classList.remove('theme-safe', 'theme-overload');
         document.body.classList.add('theme-warning');
     } else {

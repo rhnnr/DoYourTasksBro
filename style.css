@@ -168,9 +168,9 @@ body
 
 body.theme-safe 
 {
-    background-color: #0f172a; /* Deep calm dark blue */
+    background-color: #0f172a;
     color: #f8fafc;
-    transition: background-color 0.5s ease; /* Smooth fade transitions */
+    transition: background-color 0.5s ease; 
 }
 body.theme-safe .card 
 {
@@ -180,29 +180,30 @@ body.theme-safe .card
 
 body.theme-warning 
 {
-    background-color: #292524; /* Dusty charcoal stone */
+    background-color: #292524; 
     color: #fed7aa;
     transition: background-color 0.5s ease;
 }
 body.theme-warning .card 
 {
-    border: 2px solid #ea580c; /* Striking warning orange */
+    border: 2px solid #ea580c; 
     background-color: #44403c;
 }
 
 body.theme-overload 
 {
-    background-color: #450a0a; /* Deep emergency red */
+    background-color: #450a0a; 
     color: #fee2e2;
-    transition: background-color 0.2s ease; /* Snappy transition for anxiety */
+    transition: background-color 0.2s ease; 
 }
 body.theme-overload .card 
 {
-    border: 2px solid #ef4444; /* High-alert neon red */
+    border: 2px solid #ef4444; 
     background-color: #7f1d1d;
 }
 
-@keyframes board-rattle {
+@keyframes board-rattle 
+{
     0% { transform: translate(1px, 1px) rotate(0deg); }
     20% { transform: translate(-2px, -1px) rotate(-0.5deg); }
     40% { transform: translate(-1px, 1px) rotate(0.5deg); }
@@ -211,7 +212,56 @@ body.theme-overload .card
     100% { transform: translate(1px, 1px) rotate(0deg); }
 }
 
-/* This rule fires automatically ONLY when the body has the theme-overload tag flag */
-body.theme-overload #gravity-board {
+body.theme-overload #gravity-board 
+{
     animation: board-rattle 0.25s infinite linear;
 }
+
+@media (max-width: 600px)
+{
+    body
+    {
+        align-items: flex-start;
+        padding: 20px 10px;
+    }
+
+    h1
+    {
+        font-size: 2rem;
+    }
+
+    #app-container
+    {
+        padding: 0 10px;
+    }
+
+    #task-form
+    {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    #task-input
+    {
+        width: 100%;
+        padding: 12px 6px;
+    }
+
+    #task-form button
+    {
+        width: 100%;
+        padding: 12px;
+    }
+
+    #gravity-board
+    {
+        justify-content: center;
+        padding: 10px 0;
+        gap: 16px;
+    }
+
+    .card
+    {
+        max-width: 100%;
+    }
+} 
