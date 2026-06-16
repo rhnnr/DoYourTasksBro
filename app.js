@@ -1,4 +1,12 @@
-let taskList = [] // the global array
+let taskList; // the global array
+
+const savedData = localStorage.getItem('doyourtasksbro_data');
+
+if (savedData !== null) {
+    taskList = JSON.parse(savedData);
+} else {
+    taskList = [];
+}
 
 const taskForm = document.getElementById('task-form');
 const taskInput = document.getElementById('task-input'); // Input field
@@ -24,6 +32,8 @@ taskForm.addEventListener('submit', (e) => {
     taskInput.value = '';
     updateGlobalMetrics(); // update the global metrics
     console.log(taskList);
+
+    saveData();
 });
 
 function renderBoard() { // function declaration
@@ -44,6 +54,7 @@ function renderBoard() { // function declaration
             taskList = taskList.filter(taskItem => taskItem.id !== task.id); //remove task from the array
             renderBoard(); // re-render :)
             updateGlobalMetrics();
+            saveData();
         });
         card.appendChild(deleteBtn);
 
@@ -54,6 +65,7 @@ function renderBoard() { // function declaration
 }
 
 renderBoard(); // clear any placeholder
+updateGlobalMetrics();
 
 function updateGlobalMetrics() {
     let totalScore = 0;
@@ -62,7 +74,7 @@ function updateGlobalMetrics() {
         totalScore += task.weight;
     });
     scoreNum.textContent = totalScore;
-    
+
     if (totalScore < 50) {
         document.body.classList.remove('theme-warning', 'theme-overload');
         document.body.classList.add('theme-safe');
@@ -74,4 +86,9 @@ function updateGlobalMetrics() {
         document.body.classList.add('theme-overload');
     }
 
+}
+
+function saveData() {
+    const stringifiedVar = JSON.stringify(taskList);
+    localStorage.setItem('doyourtasksbro_data', stringifiedVar);
 }
