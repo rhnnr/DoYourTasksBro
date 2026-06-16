@@ -22,3 +22,53 @@
     font-size: calc(0.9rem + (var(--card-weight) * 0.01rem));
     padding: calc(10px + (var(--card-weight) * 0.5px));
 }
+
+body.theme-safe 
+{
+    background-color: #0f172a; /* Deep calm dark blue */
+    color: #f8fafc;
+    transition: background-color 0.5s ease; /* Smooth fade transitions */
+}
+body.theme-safe .card 
+{
+    border: 2px solid #334155;
+    background-color: #1e293b;
+}
+
+body.theme-warning 
+{
+    background-color: #292524; /* Dusty charcoal stone */
+    color: #fed7aa;
+    transition: background-color 0.5s ease;
+}
+body.theme-warning .card 
+{
+    border: 2px solid #ea580c; /* Striking warning orange */
+    background-color: #44403c;
+}
+
+body.theme-overload 
+{
+    background-color: #450a0a; /* Deep emergency red */
+    color: #fee2e2;
+    transition: background-color 0.2s ease; /* Snappy transition for anxiety */
+}
+body.theme-overload .card 
+{
+    border: 2px solid #ef4444; /* High-alert neon red */
+    background-color: #7f1d1d;
+}
+
+@keyframes board-rattle {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    20% { transform: translate(-2px, -1px) rotate(-0.5deg); }
+    40% { transform: translate(-1px, 1px) rotate(0.5deg); }
+    60% { transform: translate(2px, 2px) rotate(0deg); }
+    80% { transform: translate(-1px, -2px) rotate(-0.5deg); }
+    100% { transform: translate(1px, 1px) rotate(0deg); }
+}
+
+/* This rule fires automatically ONLY when the body has the theme-overload tag flag */
+body.theme-overload #gravity-board {
+    animation: board-rattle 0.25s infinite linear;
+}

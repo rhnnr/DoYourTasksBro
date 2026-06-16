@@ -57,8 +57,21 @@ renderBoard(); // clear any placeholder
 
 function updateGlobalMetrics() {
     let totalScore = 0;
+
     taskList.forEach(task => {
         totalScore += task.weight;
     });
     scoreNum.textContent = totalScore;
+    
+    if (totalScore < 50) {
+        document.body.classList.remove('theme-warning', 'theme-overload');
+        document.body.classList.add('theme-safe');
+    } else if (totalScore >= 50 && totalScore < 80) {
+        document.body.classList.remove('theme-safe', 'theme-overload');
+        document.body.classList.add('theme-warning');
+    } else {
+        document.body.classList.remove('theme-safe', 'theme-warning');
+        document.body.classList.add('theme-overload');
+    }
+
 }
