@@ -13,6 +13,7 @@
     padding: 20px;
     width: 100%;
     min-height: 70vh;
+    align-items: flex-start;
 }
 
 #app-container
