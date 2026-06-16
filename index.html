@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>DoYourTasksBro</title>
+        <link rel="stylesheet" href="style.css"/>
+        <script src="app.js" defer></script>
+    </head>
     <body>
         <main id="app-container">
             <header id="control-panel">
                 <h1>DoYourTasksBro</h1>
                 <div id="load-status">
-                    <span id="score-number">0</span>
+                    Load score: <span id="score-number">0</span>
                 </div>
                 <form id="task-form">
-                    <input type="text"/>
+                    <input type="text" id="task-input" placeholder="Type a commitment, Bro..."/>
                     <button type="submit">Add Task</button>
                 </form>
-                <link rel="stylesheet" href="style.css"/>
-                <script src="app.js" defer></script>
             </header>
-            <section id="gravity-board">
 
+            <section id="gravity-board">
             </section>
+
         </main>        
     </body>
-
 </html>
