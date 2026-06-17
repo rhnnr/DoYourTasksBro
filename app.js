@@ -46,9 +46,9 @@ function renderBoard() { // function declaration
         const card = document.createElement('div');
         card.classList.add('card');
 
-        if (task.weight < 30) {
+        if (task.weight < 100) {
             card.classList.add('card-low');
-        } else if (task.weight >= 30 && task.weight < 75) {
+        } else if (task.weight >= 100 && task.weight < 150) {
             card.classList.add('card-mid');
         } else {
             card.classList.add('card-high');

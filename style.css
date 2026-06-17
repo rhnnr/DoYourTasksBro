@@ -103,8 +103,8 @@
 
 .card
 {
-    font-size: calc(0.9rem + (var(--card-weight) * 0.01rem));
-    padding: calc(10px + (var(--card-weight) * 0.5px));
+    font-size: 1.1rem;
+    padding: 20px;
 
     word-break: break-word;
     overflow-wrap: break-word;
@@ -116,6 +116,7 @@
     border-radius: 8px;
     gap: 10px;
     height: 100%;
+    max-height: 280px;
 }
 
 .card:hover
@@ -128,6 +129,12 @@
 {
     line-height: 1.4;
     font-weight: 500;
+    overflow-y: auto;
+
+    flex: 1;
+    margin-bottom: 8px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .delete-btn
