@@ -46,6 +46,14 @@ function renderBoard() { // function declaration
         const card = document.createElement('div');
         card.classList.add('card');
 
+        if (task.weight < 30) {
+            card.classList.add('card-low');
+        } else if (task.weight >= 30 && task.weight < 75) {
+            card.classList.add('card-mid');
+        } else {
+            card.classList.add('card-high');
+        }
+
         const taskText = document.createElement('p');
         taskText.textContent = task.text;
         card.appendChild(taskText); // append the task text to the card

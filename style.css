@@ -7,13 +7,14 @@
 
 #gravity-board 
 {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
     padding: 20px;
     width: 100%;
     min-height: 70vh;
-    align-items: flex-start;
+    align-items: stretch;
+    align-content: start;
 }
 
 #app-container
@@ -102,19 +103,19 @@
 
 .card
 {
-    width: calc(140px + (var(--card-weight) * 3px));
-    min-height: calc(80px + (var(--card-weight) * 2px));
     font-size: calc(0.9rem + (var(--card-weight) * 0.01rem));
     padding: calc(10px + (var(--card-weight) * 0.5px));
 
     word-break: break-word;
     overflow-wrap: break-word;
+    width: 100%;
     max-width: 320px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     border-radius: 8px;
     gap: 10px;
+    height: 100%;
 }
 
 .card:hover
@@ -172,11 +173,6 @@ body.theme-safe
     color: #f8fafc;
     transition: background-color 0.5s ease; 
 }
-body.theme-safe .card 
-{
-    border: 2px solid #334155;
-    background-color: #1e293b;
-}
 
 body.theme-warning 
 {
@@ -184,22 +180,30 @@ body.theme-warning
     color: #fed7aa;
     transition: background-color 0.5s ease;
 }
-body.theme-warning .card 
-{
-    border: 2px solid #ea580c; 
-    background-color: #44403c;
-}
 
 body.theme-overload 
 {
-    background-color: #450a0a; 
+    background-color: #7f1d1d; 
     color: #fee2e2;
     transition: background-color 0.2s ease; 
 }
-body.theme-overload .card 
+
+.card.card-low
 {
-    border: 2px solid #ef4444; 
-    background-color: #7f1d1d;
+    background-color: #1e293b; 
+    border: 2px solid #334155;
+}
+
+.card.card-mid
+{
+    background-color: #2a241c;
+    border: 2px solid #ea580c;
+}
+
+.card.card-high
+{
+    background-color: #3b1111; 
+    border: 2px solid #ef4444;
 }
 
 @keyframes board-rattle 
