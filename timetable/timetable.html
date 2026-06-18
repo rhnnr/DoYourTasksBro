@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoYourTaskBro</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="timetable.css">
+    <script src="timetable.js" defer></script>
+</head>
+
+<body>
+
+    <nav id="sidebar" class="close">
+        <ul>
+            <li>
+                <span class="logo"><h3>DoYourTasksBro</h3></span>
+                <button onclick=toggleSidebar() id="toggle-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z"/></svg>                </button>
+            </li>
+            <li>
+                <a href="../index.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="../todo/todo.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m438-240 226-226-58-58-169 169-84-84-57 57 142 142ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
+                    <span>Todo-List</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="timetable.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm360-80h100v-480H520v480Zm-180 0h100v-480H340v480Zm-180 0h100v-480H160v480Zm540 0h100v-480H700v480Z"/></svg>
+                    <span>Time Table</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <main id="app-container" class="bro-landing">
+        <header id="control-panel">
+            <h1>DoYourTimeBro</h1>
+            <p>TEST</p>
+
+            <form id="schedule-form">
+                <input type="text" id="block-label" placeholder="Activity..." required/>
+                <select id="block-day">
+                    <option value="mon">Monday</option>
+                    <option value="tue">Tuesday</option>
+                    <option value="wed">Wednesday</option>
+                    <option value="thu">Thursday</option>
+                    <option value="fri">Friday</option>
+                    <option value="sat">Saturday</option>
+                    <option value="sun">Sunday</option>
+                </select>
+                <input type="time" id="block-start" required/>
+                <input type="time" id="block-end" required/>
+                <button type="submit" id="block-add">Lock Block</button>    
+            </form>
+        </header>
+
+        <div id="matrix-wrapper">
+            <div class="time-axis">
+                <div class="axis-header">Time</div>
+                <div class="axis-slots">
+                    <div class="hour-slot">12 AM</div>
+                    <div class="hour-slot">1 AM</div>
+                    <div class="hour-slot">2 AM</div>
+                    <div class="hour-slot">3 AM</div>
+                    <div class="hour-slot">4 AM</div>
+                    <div class="hour-slot">5 AM</div>
+                    <div class="hour-slot">6 AM</div>
+                    <div class="hour-slot">7 AM</div>
+                    <div class="hour-slot">8 AM</div>
+                    <div class="hour-slot">9 AM</div>
+                    <div class="hour-slot">10 AM</div>
+                    <div class="hour-slot">11 AM</div>
+                    <div class="hour-slot">12 PM</div>
+                    <div class="hour-slot">1 PM</div>
+                    <div class="hour-slot">2 PM</div>
+                    <div class="hour-slot">3 PM</div>
+                    <div class="hour-slot">4 PM</div>
+                    <div class="hour-slot">5 PM</div>
+                    <div class="hour-slot">6 PM</div>
+                    <div class="hour-slot">7 PM</div>
+                    <div class="hour-slot">8 PM</div>
+                    <div class="hour-slot">9 PM</div>
+                    <div class="hour-slot">10 PM</div>
+                    <div class="hour-slot">11 PM</div>
+                </div>
+            </div>
+
+            <section id="timetable-matrix">
+                <div class="day-column" id="col-sun"><h3 class="day-header">Sun</h3><div class="track-canvas"></div></div>
+                <div class="day-column" id="col-mon"><h3 class="day-header">Mon</h3><div class="track-canvas"></div></div>
+                <div class="day-column" id="col-tue"><h3 class="day-header">Tue</h3><div class="track-canvas"></div></div>
+                <div class="day-column" id="col-wed"><h3 class="day-header">Wed</h3><div class="track-canvas"></div></div>
+                <div class="day-column" id="col-thu"><h3 class="day-header">Thu</h3><div class="track-canvas"></div></div>
+                <div class="day-column" id="col-fri"><h3 class="day-header">Fri</h3><div class="track-canvas"></div></div>
+                <div class="day-column" id="col-sat"><h3 class="day-header">Sat</h3><div class="track-canvas"></div></div>
+            </section>
+                
+        </div>
+    </main>
+</body>
+</html>

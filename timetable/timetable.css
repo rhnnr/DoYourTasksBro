@@ -1,0 +1,258 @@
+:root
+{
+    --main-bg: #0B1020;
+    --sidebar-bg: #121829;
+    --sidebar-border: #30363d;
+    --text-main: #E9F1FF;
+    --text-second: #64748B;
+    --hover-clr: #161F35;
+    --selected-bg: #425070;
+    --selected-text: #FFFFFF;
+
+    --hour-height: 60px;
+    --matrix-padding: 12px;
+    --total-matrix-height: calc(var(--hour-height) * 24);
+}
+
+#timetable-matrix
+{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    flex-grow: 1;
+}
+
+#matrix-wrapper
+{
+    display: flex;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: var(--matrix-padding);
+    margin-top: 24px;
+    overflow-x: auto;
+}
+
+.time-axis
+{
+    width: 65px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    padding: var(--matrix-padding);
+    border: 1px solid transparent;
+}
+
+.axis-header
+{
+    height: 40px;
+    font-size: 0.75rem;
+    color: #444;
+    text-transform: uppercase;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.axis-slots
+{
+    height: var(--total-matrix-height);
+    position: relative;
+}
+
+.hour-slot
+{
+    height: var(--hour-height);
+    font-size: 0.75rem;
+    color: var(--text-second, #888);
+    font-family: monospace;
+    display: flex;
+    align-items: flex-start;
+    transform: translateY(-7px);
+}
+
+.day-column
+{
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    padding: var(--matrix-padding);
+    display: flex;
+    flex-direction: column;
+}
+
+.day-header
+{
+    color: var(--text-main, #e3e3e3);
+    height: 40px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.track-canvas
+{
+    height: var(--total-matrix-height);
+    position: relative;
+    border-radius: 4px;
+    border-left: 1px dashed rgba(255, 255, 255, 0.03);
+
+    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 100% var(--hour-height);
+    background-position: top left;
+}
+
+.schedule-block
+{
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    background: rgba(52, 152, 219, 0.15);
+    border: 1px solid rgba(52, 152, 219, 0.4);
+    border-left: 4px solid #3498db;
+    border-radius: 6px;
+    padding: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    z-index: 2;
+}
+
+.block-label
+{
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.block-duration
+{
+    font-size: 0.7rem;
+    color: #aaa;
+    font-family: monospace;
+    margin-top: 2px;
+}
+
+#control-panel {
+    margin-bottom: 24px;
+}
+
+#schedule-form {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap; 
+}
+
+#schedule-form input[type="text"],
+#schedule-form select,
+#schedule-form input[type="time"] {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #e3e3e3;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+#block-label {
+    flex: 3;            
+    min-width: 220px;
+}
+
+#block-day,
+#block-start,
+#block-end {
+    flex: 1;            
+    min-width: 130px;
+    text-align: center;
+}
+
+#schedule-form select {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;   
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23e3e3e3'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+
+    height: 44px;
+    display: inline-block;
+    line-height: 20px;
+    overflow: hidden;
+}
+
+#schedule-form input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1); 
+    cursor: pointer;
+}
+
+#schedule-form input:focus,
+#schedule-form select:focus {
+    border-color: #3498db;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
+}
+
+#block-add {
+    background: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    align-self: stretch; 
+}
+
+#block-add:hover {
+    background: #2980b9;
+    transform: translateY(-1px);
+}
+
+#block-add:active {
+    transform: translateY(1px);
+}
+
+/* --- Interactive Block Close Action --- */
+.schedule-block {
+    position: absolute;
+    padding-right: 20px; /* Leave breathing space so text doesn't overlap cross icon */
+}
+
+.block-remove-btn {
+    position: absolute;
+    top: 2px;
+    right: 6px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1.1rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s ease;
+    user-select: none;
+}
+
+.block-remove-btn:hover {
+    color: #e74c3c; /* Destructive red accent alert on focus hover */
+}
