@@ -5,19 +5,29 @@ const overloadThreshold = 600;
 
 const savedData = localStorage.getItem('doyourtasksbro_data');
 
+const toggleButton = document.getElementById('toggle-btn')
+const sideBar = document.getElementById('sidebar')
+
+const taskForm = document.getElementById('task-form');
+const taskInput = document.getElementById('task-input'); // Input field
+const taskAdd = document.getElementById('task-add');
+const taskDeadline = document.getElementById('task-deadline');
+const scoreNum = document.getElementById('score-number');
+const gravityBoard = document.getElementById('gravity-board');
+
+
 if (savedData !== null) {
     taskList = JSON.parse(savedData);
 } else {
     taskList = [];
 }
 
-const toggleButton = document.getElementById('toggle-btn')
-const sideBar = document.getElementById('sidebar')
 
 if(localStorage.getItem('sidebar_closed') === 'true') {
     sideBar.classList.add('close');
     toggleButton.classList.add('rotate')
 }
+
 
 function toggleSidebar() {
     const isClosed = sideBar.classList.toggle('close');
@@ -25,11 +35,7 @@ function toggleSidebar() {
     localStorage.setItem('sidebar_closed', isClosed);
 }
 
-const taskForm = document.getElementById('task-form');
-const taskInput = document.getElementById('task-input'); // Input field
-const taskAdd = document.getElementById('task-add');
-const scoreNum = document.getElementById('score-number');
-const gravityBoard = document.getElementById('gravity-board');
+
 
 taskForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -42,23 +48,26 @@ taskForm.addEventListener('submit', (e) => {
     const taskObject = {
         id: Date.now(),
         text: cleanText,
-        weight: cleanText.length
+        weight: cleanText.length,
+        deadline: taskDeadline.value
     };
 
     taskList.push(taskObject); // pushing a variable to the global array
     renderBoard(); // call to render
     taskInput.value = '';
+    taskDeadline.value = '';
     updateGlobalMetrics(); // update the global metrics
     console.log(taskList);
 
     saveData();
 });
 
+
 function renderBoard() { // function declaration
     gravityBoard.innerHTML = ''; // clear the board before rendering
 
     taskList.forEach(task => {
-        const card = document.createElement('div');
+        const card = document.createElement('div'); //parent
         card.classList.add('card');
 
         if (task.weight < 100) {
@@ -73,6 +82,15 @@ function renderBoard() { // function declaration
         taskText.textContent = task.text;
         card.appendChild(taskText); // append the task text to the card
 
+        const cardFooter = document.createElement('div');
+        cardFooter.classList.add('card-footer');
+
+        if (task.deadline.length > 0) {
+            const deadline = document.createElement('span');
+            deadline.textContent = task.deadline;
+            deadline.classList.add('card-deadline');
+            cardFooter.appendChild(deadline);
+        }
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'Done';
         deleteBtn.classList.add('delete-btn');
@@ -81,8 +99,10 @@ function renderBoard() { // function declaration
             renderBoard(); // re-render :)
             updateGlobalMetrics();
             saveData();
-        });
-        card.appendChild(deleteBtn);
+            
+        });        
+        cardFooter.appendChild(deleteBtn);
+        card.appendChild(cardFooter);
 
         card.style.setProperty('--card-weight', task.weight); 
 
@@ -90,8 +110,10 @@ function renderBoard() { // function declaration
     });
 }
 
+
 renderBoard(); // clear any placeholder
 updateGlobalMetrics();
+
 
 function updateGlobalMetrics() {
     let totalScore = 0;
@@ -119,6 +141,7 @@ function updateGlobalMetrics() {
     }
 
 }
+
 
 function saveData() {
     const stringifiedVar = JSON.stringify(taskList);

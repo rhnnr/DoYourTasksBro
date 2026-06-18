@@ -188,7 +188,6 @@
 
 .delete-btn
 {
-    align-self: flex-end;
     padding: 6px 14px;
     font-size: 0.8rem;
     font-weight: 700;
@@ -198,6 +197,7 @@
     color: inherit;
     cursor: pointer;
     transition: all 0.2s ease;
+    margin-left: auto;
 }
 
 .delete-btn:hover
@@ -250,6 +250,47 @@ body.theme-overload
 {
     background-color: var(--card-overload-bg); 
     border: 2px solid var(--card-overload-border);
+}
+
+.card-footer
+{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-deadline
+{
+    font-size: 0.8rem;
+    color: var(--text-second);
+    font-weight: 650;
+    background-color: rgba(7, 100, 240, 0.08);
+    padding: 5px 10px;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+}
+
+#task-deadline
+{
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--text-main);
+    position: relative;
+    text-align: center;
+}
+
+#task-deadline::-webkit-calendar-picker-indicator
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
 }
 
 @keyframes board-rattle 
@@ -317,5 +358,11 @@ body.theme-overload #gravity-board
     {
         width: 100%;
         max-width: 100%;
+        font-size: 0.8rem;
+    }
+
+    #task-deadline
+    {
+        height: 30px;
     }
 } 
