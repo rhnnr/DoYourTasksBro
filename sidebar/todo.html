@@ -1,40 +1,58 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>DoYourTasksBro</title>
-        <link rel="stylesheet" href="style.css"/>
-        <script src="app.js" defer></script>
-    </head>
-    <body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoYourTasksBro</title>
+    <link rel="stylesheet" href="todo.css">
+    <link rel="stylesheet" href="../style.css">
+    <script src="todo.js" defer></script>
+</head>
+<body>
 
-        <nav id="sidebar-menu">
-            <ul>
-                <li class="active">
-                    <a href="index.html"></a>
-                </li>
-                <li>TEST 1</li>
-                <li>TEST 2</li>
-                <li>TEST 3</li>
-            </ul>
-        </nav>
+    <nav id="sidebar" class="close">
+        <ul>
+            <li>
+                <span class="logo"><h3>DoYourTasksBro</h3></span>
+                <button onclick=toggleSidebar() id="toggle-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z"/></svg>                </button>
+            </li>
+            <li>
+                <a href="../index.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="todo.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m438-240 226-226-58-58-169 169-84-84-57 57 142 142ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
+                    <span>Todo-List</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm360-80h100v-480H520v480Zm-180 0h100v-480H340v480Zm-180 0h100v-480H160v480Zm540 0h100v-480H700v480Z"/></svg>
+                    <span>Time Table</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 
-        <main id="app-container">
-            <header id="control-panel">
-                <h1>DoYourTasksBro</h1>
-                <div id="load-status">
-                    Load score: <span id="score-number">0</span>
-                </div>
-                <form id="task-form">
-                    <input type="text" id="task-input" placeholder="Type a commitment, Bro..."/>
-                    <button type="submit">Add Task</button>
-                </form>
-            </header>
+    <main id="app-container">
+        <header id="control-panel">
+            <h1>DoYourTasksBro</h1>
+            <div id="load-status">
+                Load score: <span id="score-number">0</span>
+            </div>
+            <form id="task-form">
+                <input type="text" id="task-input" placeholder="Type a commitment, Bro..."/>
+                <button type="submit">Add Task</button>
+            </form>
+        </header>
 
-            <section id="gravity-board">
-            </section>
+        <section id="gravity-board">
+        </section>
 
-        </main>        
-    </body>
+    </main>  
+</body>
 </html>

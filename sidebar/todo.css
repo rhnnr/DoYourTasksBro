@@ -1,0 +1,321 @@
+:root
+{
+    --main-bg: #0B1020;
+    --sidebar-bg: #121829;
+    --sidebar-border: #30363d;
+    --text-main: #E9F1FF;
+    --text-second: #64748B;
+    --hover-clr: #161F35;
+    --selected-bg: #425070;
+    --selected-text: #FFFFFF;
+
+    --safe-bg: #0b1020;
+    --card-safe-bg: #0e162b;
+    --card-safe-border: #2c405e;
+    --card-safe-text: #E9F1FF;
+    --card-safe-text-sec: #64748B;
+    --safe-hover-bg: #222E4C;
+    --safe-hover-border: #1d84fa;
+
+    --warning-bg: #251f35;
+    --card-warn-bg: #201831;
+    --card-warn-border: #514072;
+    --card-warn-text: #E9F1FF;
+    --card-warn-text-sec: #64748B;
+    --warn-hover-bg: #312947;
+    --warn-hover-border: #9B66FF;
+
+    --overload-bg: #32142b;
+    --card-overload-bg: #310f29;
+    --card-overload-border: #693960;
+    --card-overload-text: #FFFFFF;
+    --card-overload-text-sec: #64748B;
+    --overload-hover-bg: #421B39;
+    --overload-hover-border: #FF66E3;
+}
+
+#gravity-board 
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 20px;
+    width: 100%;
+    min-height: 70vh;
+    align-items: start;
+    align-content: start;
+}
+
+#app-container
+{
+    width: 100%;
+    max-width: 1600px;
+    padding: 0 20px;
+    margin: 0 auto;
+}
+
+#control-panel 
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+#load-status 
+{
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+}
+
+#score-number 
+{
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-left: 5px;
+}
+
+#task-form 
+{
+    display: flex;
+    width: 100%;
+    max-width: 500px;
+    gap: 10px;
+}
+
+#task-input 
+{
+    flex: 1;
+    padding: 14px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: inherit;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#task-input:focus 
+{
+    border-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+#task-form button 
+{
+    padding: 14px 24px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 8px;
+    border: none;
+    background-color: #ffffff;
+    color: #0f172a;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#task-form button:hover 
+{
+    transform: translateY(-1px);
+    opacity: 0.9;
+}
+
+#task-form button:active 
+{
+    transform: translateY(1px);
+}
+
+.card
+{
+    font-size: 1rem;
+    padding: 10px;
+
+    word-break: break-word;
+    overflow-wrap: break-word;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 8px;
+    gap: 10px;
+    height: 150px;
+}
+
+.card.card-low:hover
+{
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    background-color: var(--safe-hover-bg);
+    border-color: var(--safe-hover-border);
+}
+
+.card.card-mid:hover
+{
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    background-color: var(--warn-hover-bg);
+    border-color: var(--warn-hover-border);
+}
+
+.card.card-high:hover
+{
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    background-color: var(--overload-hover-bg);
+    border-color: var(--overload-hover-border);
+}
+
+.card p
+{
+    line-height: 1.4;
+    font-weight: 500;
+    overflow-y: auto;
+
+    flex: 1;
+    margin-bottom: 8px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    
+    text-align: justify;
+}
+
+.delete-btn
+{
+    align-self: flex-end;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.delete-btn:hover
+{
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+header h1
+{
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    margin-bottom: 10px;
+}
+
+body.theme-safe 
+{
+    background-color: var(--safe-bg);
+    color: var(--card-safe-text);
+    transition: background-color 0.5s ease; 
+}
+
+body.theme-warning 
+{
+    background-color: var(--warning-bg); 
+    color: var(--card-warn-text);
+    transition: background-color 0.5s ease;
+}
+
+body.theme-overload 
+{
+    background-color: var(--overload-bg); 
+    color: var(--card-overload-text);
+    transition: background-color 0.2s ease; 
+}
+
+.card.card-low
+{
+    background-color: var(--card-safe-bg); 
+    border: 2px solid var(--card-safe-border);
+}
+
+.card.card-mid
+{
+    background-color: var(--card-warn-bg);
+    border: 2px solid var(--card-warn-border);
+}
+
+.card.card-high
+{
+    background-color: var(--card-overload-bg); 
+    border: 2px solid var(--card-overload-border);
+}
+
+@keyframes board-rattle 
+{
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    20% { transform: translate(-2px, -1px) rotate(-0.5deg); }
+    40% { transform: translate(-1px, 1px) rotate(0.5deg); }
+    60% { transform: translate(2px, 2px) rotate(0deg); }
+    80% { transform: translate(-1px, -2px) rotate(-0.5deg); }
+    100% { transform: translate(1px, 1px) rotate(0deg); }
+}
+
+body.theme-overload #gravity-board 
+{
+    animation: board-rattle 0.25s infinite linear;
+}
+
+@media (max-width: 800px)
+{
+
+
+
+    h1
+    {
+        padding-top: 0.5em;
+        font-size: 2rem;
+    }
+
+    #app-container
+    {
+        padding: 0 10px;
+    }
+
+    #task-form
+    {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    #task-input
+    {
+        width: 100%;
+        padding: 12px 6px;
+    }
+
+    #task-form button
+    {
+        width: 100%;
+        padding: 12px;
+    }
+
+    #gravity-board
+    {
+        justify-content: center;
+        padding: 10px 0;
+        gap: 16px;
+
+        padding-top: 10px;
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 90px;
+    }
+
+    .card
+    {
+        width: 100%;
+        max-width: 100%;
+    }
+} 

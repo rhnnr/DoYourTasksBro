@@ -11,12 +11,24 @@ if (savedData !== null) {
     taskList = [];
 }
 
+const toggleButton = document.getElementById('toggle-btn')
+const sideBar = document.getElementById('sidebar')
+
+if(localStorage.getItem('sidebar_closed') === 'true') {
+    sideBar.classList.add('close');
+    toggleButton.classList.add('rotate')
+}
+
+function toggleSidebar() {
+    const isClosed = sideBar.classList.toggle('close');
+    toggleButton.classList.toggle('rotate');
+    localStorage.setItem('sidebar_closed', isClosed);
+}
+
 const taskForm = document.getElementById('task-form');
 const taskInput = document.getElementById('task-input'); // Input field
 const scoreNum = document.getElementById('score-number');
 const gravityBoard = document.getElementById('gravity-board');
-const sidebarToggle = document.getElementById('sidebar-toggle');
-const sidebarMenu = document.getElementById('sidebar-menu');
 
 taskForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -105,7 +117,3 @@ function saveData() {
     const stringifiedVar = JSON.stringify(taskList);
     localStorage.setItem('doyourtasksbro_data', stringifiedVar);
 }
-
-sidebarToggle.addEventListener('click', () => {
-    sidebarMenu.classList.toggle('collapsed');
-})
