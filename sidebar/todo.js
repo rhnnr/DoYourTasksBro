@@ -1,7 +1,7 @@
 let taskList = []; // the global array
 
-const warningThreshold = 150;
-const overloadThreshold = 300;
+const warningThreshold = 300;
+const overloadThreshold = 600;
 
 const savedData = localStorage.getItem('doyourtasksbro_data');
 
@@ -27,6 +27,7 @@ function toggleSidebar() {
 
 const taskForm = document.getElementById('task-form');
 const taskInput = document.getElementById('task-input'); // Input field
+const taskAdd = document.getElementById('task-add');
 const scoreNum = document.getElementById('score-number');
 const gravityBoard = document.getElementById('gravity-board');
 
@@ -103,12 +104,18 @@ function updateGlobalMetrics() {
     if (totalScore < warningThreshold) {
         document.body.classList.remove('theme-warning', 'theme-overload');
         document.body.classList.add('theme-safe');
+        taskAdd.disabled = false;
+        taskInput.disabled = false;
     } else if (totalScore >= warningThreshold && totalScore < overloadThreshold) {
         document.body.classList.remove('theme-safe', 'theme-overload');
         document.body.classList.add('theme-warning');
+        taskAdd.disabled = false;
+        taskInput.disabled = false;
     } else {
         document.body.classList.remove('theme-safe', 'theme-warning');
         document.body.classList.add('theme-overload');
+        taskAdd.disabled = true;
+        taskInput.disabled = true
     }
 
 }
