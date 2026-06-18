@@ -1,10 +1,241 @@
-*, *::before, *::after
+:root
+{
+    --main-bg: #0B1020;
+    --sidebar-bg: #121829;
+    --sidebar-border: #30363d;
+    --text-main: #E9F1FF;
+    --text-second: #64748B;
+    --hover-clr: #161F35;
+    --selected-bg: #425070;
+    --selected-text: #FFFFFF;
+
+    --card-safe-bg: #1A233A;
+    --card-safe-border: #00F5FF;
+    --card-safe-text: #E9F1FF;
+    --card-safe-text-sec: #64748B;
+    --safe-hover-bg: #222E4C;
+    --safe-hover-border: #55F9FF;
+
+    --card-warn-bg: #251F35;
+    --card-warn-border: #7C3CFF;
+    --card-warn-text: E9F1FF;
+    --card-warn-text-sec: #64748B;
+    --warn-hover-bg: #312947;
+    --warn-hover-border: #9B66FF;
+
+    --card-overload-bg: #32142B;
+    --card-overload-border: #FF2BD6;
+    --card-overload-text: #FFFFFF;
+    --card-overload-text-sec: #64748B;
+    --overload-hover-bg: #421B39;
+    --overload-hover-border: #FF66E3;
+
+
+}
+
+*
 {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
+html
+{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5rem;
+}
+
+body
+{
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-color: var(--main-bg);
+    color: var(--text-main);
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+#sidebar
+{
+    box-sizing: border-box;
+    height: 100vh;
+    width: 250px;
+    padding: 6px 1em;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
+
+    position: sticky;
+    top: 0;
+    align-self: start;
+
+    transition: 300ms ease-in-out;
+    overflow: hidden;
+    text-wrap: nowrap;
+}
+
+#sidebar.close 
+{
+    padding: 6px;
+    width: 60px;
+}
+
+#sidebar ul
+{
+    list-style: none;   
+}
+
+#sidebar > ul > li:first-child
+{
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+#sidebar ul li.active a
+{
+    color: var(--selected-bg);
+    
+    svg{
+        fill: var(--selected-bg)
+    }
+}
+
+#sidebar a,
+#sidebar .logo
+{
+    border: 0.5em;
+    padding: 0.85em;
+    text-decoration: none;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+
+#sidebar svg
+{
+    flex-shrink: 0;
+    fill: var(--text-main);
+}
+
+#sidebar a span
+{
+    flex-grow: 1;
+}
+
+#sidebar a:hover
+{
+    background-color: var(--hover-clr);
+}
+
+#toggle-btn
+{
+    margin-left: auto;
+    padding: 1em;
+    border: none;
+    border-radius: .5em;
+    background: none;
+    cursor: pointer;
+
+    svg{
+        transition: rotate 150ms ease;
+    }
+}
+
+#toggle-btn.rotate svg
+{
+    rotate: 180deg;
+}
+
+#toggle-btn:hover
+{
+    background-color: var(--hover-clr);
+}
+
+main
+{
+    padding: min(30px, 7%);
+}
+
+main p
+{
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.container
+{
+    border: 1px solid var(--sidebar-border);
+    border-radius: 1em;
+    margin-bottom: 20px;
+    padding: min(3em, 15%);
+
+    h2, p { margin-top: 1em }
+}
+
+
+
+@media(max-width: 800px)
+{
+    body
+    {
+        grid-template-columns: 1fr;
+    }
+    main
+    {
+        padding: 2em 1em 60px 1em;
+    }
+    .container
+    {
+        border: none;
+        padding: 0;
+    }
+    #sidebar
+    {
+        height: 60px;
+        width: 100%;
+        border-right: none;
+        border-top: 1px solid var(--sidebar-border);
+        padding: 0;
+        position: fixed;
+        top: unset;
+        bottom: 0;
+        
+        > ul
+        {
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 60px;
+            align-items: center;
+            overflow-x: visible;
+        }
+
+        ul li 
+        {
+            height: 100%;
+        }
+
+        ul a
+        {
+            width: 100%;
+            height: 60px;
+            padding: 0;
+            border-radius: 0;
+            justify-content: center;
+        }
+
+        ul li span,
+        ul li:first-child
+        {
+            display: none;
+        }
+    }
+    
+}
+
+
+/*
 #gravity-board 
 {
     display: grid;

@@ -1,28 +1,53 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>DoYourTasksBro</title>
-        <link rel="stylesheet" href="style.css"/>
-        <script src="app.js" defer></script>
-    </head>
-    <body>
-        <main id="app-container">
-            <header id="control-panel">
-                <h1>DoYourTasksBro</h1>
-                <div id="load-status">
-                    Load score: <span id="score-number">0</span>
-                </div>
-                <form id="task-form">
-                    <input type="text" id="task-input" placeholder="Type a commitment, Bro..."/>
-                    <button type="submit">Add Task</button>
-                </form>
-            </header>
-
-            <section id="gravity-board">
-            </section>
-
-        </main>        
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoYourTasksBro</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <nav id="sidebar">
+        <ul>
+            <li>
+                <span class="logo"><h3>DoYourTasksBro</h3></span>
+                <button onclick=toggleSidebar() id="toggle-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z"/></svg>                </button>
+            </li>
+            <li class="active">
+                <a href="index.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="todo.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m438-240 226-226-58-58-169 169-84-84-57 57 142 142ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
+                    <span>Todo-List</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm360-80h100v-480H520v480Zm-180 0h100v-480H340v480Zm-180 0h100v-480H160v480Zm540 0h100v-480H700v480Z"/></svg>
+                    <span>Time Table</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <main>
+        <div class="container">
+            <h2>Hello World</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pellentesque nisl dolor, quis efficitur mi vehicula in. Nam venenatis dolor id orci dignissim vehicula. Phasellus vitae velit et elit iaculis sollicitudin. Pellentesque vestibulum, metus ac mollis vestibulum, libero tellus cursus purus, ut sagittis metus velit ut nisi. Integer et augue ac dui dapibus pretium in scelerisque purus. Cras eu consequat neque. Praesent tempor, mi quis faucibus pretium, nibh sem gravida nibh, finibus pharetra tellus leo quis nulla. In orci diam, interdum eget leo posuere, gravida facilisis purus. Aliquam commodo ut ipsum in laoreet. Nulla ac orci nec purus molestie cursus. Nullam a nunc ac tellus pellentesque interdum non eget erat.
+            </p>
+        </div>
+        <div class="container">
+            <h2>Sample</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pellentesque nisl dolor, quis efficitur mi vehicula in. Nam venenatis dolor id orci dignissim vehicula. Phasellus vitae velit et elit iaculis sollicitudin. Pellentesque vestibulum, metus ac mollis vestibulum, libero tellus cursus purus, ut sagittis metus velit ut nisi. Integer et augue ac dui dapibus pretium in scelerisque purus. Cras eu consequat neque. Praesent tempor, mi quis faucibus pretium, nibh sem gravida nibh, finibus pharetra tellus leo quis nulla. In orci diam, interdum eget leo posuere, gravida facilisis purus. Aliquam commodo ut ipsum in laoreet. Nulla ac orci nec purus molestie cursus. Nullam a nunc ac tellus pellentesque interdum non eget erat.
+            </p>
+        </div>
+    </main>
+</body>
 </html>
