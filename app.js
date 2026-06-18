@@ -1,9 +1,9 @@
-const toggleButton = document.getElementById('toggle-btn');
-const sideBar = document.getElementById('sidebar');
+const toggleButton = document.getElementById('toggle-btn')
+const sideBar = document.getElementById('sidebar')
 
 if(localStorage.getItem('sidebar_closed') === 'true') {
     sideBar.classList.add('close');
-    toggleButton.classList.add('rotate')
+    toggleButton.classList.add('rotate');
 }
 
 function toggleSidebar() {

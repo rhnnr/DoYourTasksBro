@@ -199,7 +199,8 @@ main p
         padding: 0;
     }
 
-    #sidebar
+    #sidebar,
+    #sidebar.close
     {
         height: 60px;
         width: 100%;
@@ -207,7 +208,7 @@ main p
         border-top: 1px solid var(--sidebar-border);
         padding: 0;
         position: fixed;
-        top: unset;
+        top: auto;
         bottom: 0;
         
         > ul
