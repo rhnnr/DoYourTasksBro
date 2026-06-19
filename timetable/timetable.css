@@ -1,5 +1,4 @@
-:root
-{
+:root {
     --main-bg: #0B1020;
     --sidebar-bg: #121829;
     --sidebar-border: #30363d;
@@ -8,22 +7,19 @@
     --hover-clr: #161F35;
     --selected-bg: #425070;
     --selected-text: #FFFFFF;
-
     --hour-height: 60px;
     --matrix-padding: 12px;
     --total-matrix-height: calc(var(--hour-height) * 24);
 }
 
-#timetable-matrix
-{
+#timetable-matrix {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 8px;
     flex-grow: 1;
 }
 
-#matrix-wrapper
-{
+#matrix-wrapper {
     display: flex;
     background: rgba(255, 255, 255, 0.01);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -33,15 +29,13 @@
     overflow-x: auto;
 }
 
-#app-container
-{
+#app-container {
     padding: 0 32px 32px 32px;
     box-sizing: border-box;
     min-height: 100vh;
 }
 
-.time-axis
-{
+.time-axis {
     width: 65px;
     flex-shrink: 0;
     display: flex;
@@ -50,36 +44,32 @@
     border: 1px solid transparent;
 }
 
-.axis-header
-{
+.axis-header {
     height: 40px;
     font-size: 0.75rem;
-    color: #444;
+    color: var(--text-second);
     text-transform: uppercase;
     font-weight: 700;
     display: flex;
     align-items: center;
 }
 
-.axis-slots
-{
+.axis-slots {
     height: var(--total-matrix-height);
     position: relative;
 }
 
-.hour-slot
-{
+.hour-slot {
     height: var(--hour-height);
     font-size: 0.75rem;
-    color: var(--text-second, #888);
+    color: var(--text-second);
     font-family: monospace;
     display: flex;
     align-items: flex-start;
     transform: translateY(-7px);
 }
 
-.day-column
-{
+.day-column {
     background: rgba(255, 255, 255, 0.01);
     border: 1px solid rgba(255, 255, 255, 0.04);
     border-radius: 8px;
@@ -88,9 +78,8 @@
     flex-direction: column;
 }
 
-.day-header
-{
-    color: var(--text-main, #e3e3e3);
+.day-header {
+    color: var(--text-main);
     height: 40px;
     margin: 12px 0 0 0;
     display: flex;
@@ -101,26 +90,23 @@
     letter-spacing: 1px;
 }
 
-.track-canvas
-{
+.track-canvas {
     height: var(--total-matrix-height);
     position: relative;
     border-radius: 4px;
     border-left: 1px dashed rgba(255, 255, 255, 0.03);
-
     background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size: 100% var(--hour-height);
     background-position: top left;
 }
 
-.schedule-block
-{
+.schedule-block {
     position: absolute;
     left: 4px;
     right: 4px;
-    background: rgba(52, 152, 219, 0.15);
-    border: 1px solid rgba(52, 152, 219, 0.4);
-    border-left: 4px solid #3498db;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 4px solid var(--selected-bg);
     border-radius: 6px;
     padding: 10px;
     overflow: hidden;
@@ -132,21 +118,19 @@
     backdrop-filter: blur(4px);
 }
 
-.card-text
-{
+.card-text {
     font-size: 0.8rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--selected-text);
     margin: 0;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
 }
 
-.card-time
-{
+.card-time {
     font-size: 0.7rem;
-    color: #aaa;
+    color: var(--text-second);
     font-family: monospace;
     margin-top: 2px;
 }
@@ -157,18 +141,23 @@
 
 #schedule-form {
     display: flex;
-    gap: 12px;
-    align-items: center;
+    flex-direction: column;
+    gap: 16px;
     background: rgba(255, 255, 255, 0.02);
     padding: 16px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 10px;
     margin-top: 16px;
-    flex-wrap: wrap; 
+}
+
+.form-row {
+    display: flex;
+    width: 100%;
+    gap: 12px;
+    align-items: center;
 }
 
 #schedule-form input[type="text"],
-#schedule-form select,
 #schedule-form input[type="time"] {
     background: rgba(255, 255, 255, 0.05);
     border: 2px solid rgba(255, 255, 255, 0.1);
@@ -183,31 +172,50 @@
 }
 
 #block-label {
-    flex: 3;            
-    min-width: 220px;
+    flex: 1;
+    min-width: 200px;
 }
 
-#block-day,
-#block-start,
-#block-end {
-    flex: 1;            
-    min-width: 130px;
+#block-day {
+    flex: 1.5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+}
+
+#block-day label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: #e3e3e3;
+    padding: 8px 14px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    user-select: none;
+    flex: 1;
     text-align: center;
 }
 
-#schedule-form select {
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;   
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23e3e3e3'><path d='M7 10l5 5 5-5z'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 36px;
+#block-day label input[type="checkbox"] {
+    display: none;
+}
 
-    height: 44px;
-    display: inline-block;
-    line-height: 20px;
-    overflow: hidden;
+#block-day label:has(input:checked) {
+    background: var(--selected-bg);
+    border: 1px solid var(--selected-text);
+    color: var(--selected-text);
+}
+
+#block-start,
+#block-end {
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
 }
 
 #schedule-form input[type="time"]::-webkit-calendar-picker-indicator {
@@ -215,16 +223,15 @@
     cursor: pointer;
 }
 
-#schedule-form input:focus,
-#schedule-form select:focus {
-    border-color: #3498db;
+#schedule-form input:focus {
+    border-color: var(--selected-bg);
     background: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
+    box-shadow: 0 0 10px rgba(66, 80, 112, 0.2);
 }
 
 #block-add {
-    background: #3498db;
-    color: #fff;
+    background: var(--selected-bg);
+    color: var(--selected-text);
     border: none;
     border-radius: 8px;
     padding: 12px 24px;
@@ -232,12 +239,14 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
-    align-self: stretch; 
+    flex: 1;
+    height: 44px;
+    box-sizing: border-box;
 }
 
 #block-add:hover {
-    background: #2980b9;
-    transform: translateY(-1px);
+    background: var(--hover-clr);
+    border: 1px solid var(--selected-bg);
 }
 
 #block-add:active {

@@ -45,19 +45,24 @@
             <p>TEST</p>
 
             <form id="schedule-form">
-                <input type="text" id="block-label" placeholder="Activity..." required/>
-                <select id="block-day">
-                    <option value="mon">Monday</option>
-                    <option value="tue">Tuesday</option>
-                    <option value="wed">Wednesday</option>
-                    <option value="thu">Thursday</option>
-                    <option value="fri">Friday</option>
-                    <option value="sat">Saturday</option>
-                    <option value="sun">Sunday</option>
-                </select>
-                <input type="time" id="block-start" required/>
-                <input type="time" id="block-end" required/>
-                <button type="submit" id="block-add">Lock Block</button>    
+                <div class="form-row">
+                    <input type="text" id="block-label" placeholder="Activity..." required/>
+                    <div id="block-day">
+                        <label><input type="checkbox" value="mon"> Monday</label>
+                        <label><input type="checkbox" value="tue"> Tuesday</label>
+                        <label><input type="checkbox" value="wed"> Wednesday</label>
+                        <label><input type="checkbox" value="thu"> Thursday</label>
+                        <label><input type="checkbox" value="fri"> Friday</label>
+                        <label><input type="checkbox" value="sat"> Saturday</label>
+                        <label><input type="checkbox" value="sun"> Sunday</label>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <input type="time" id="block-start" required/>
+                    <input type="time" id="block-end" required/>
+                    <button type="submit" id="block-add">Lock Block</button>                       
+                </div>
             </form>
         </header>
 
