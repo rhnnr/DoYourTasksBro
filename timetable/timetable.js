@@ -22,7 +22,7 @@ const timeStringtoMinute = (timeString) => {
 scheduleForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const schedLabel = blockLabel.value;
-    const schedDay = blockDay.value;
+    const schedDay = document.querySelectorAll('#block-day input[type="checkbox"]:checked');
     const schedStart = blockStart.value;
     const schedEnd = blockEnd.value;
 
@@ -34,18 +34,26 @@ scheduleForm.addEventListener("submit", (event) => {
         return;
     }
 
-    const scheduleObjects = {
-        id: Date.now(),
-        label: schedLabel,
-        day: schedDay,
-        start: schedStart,
-        end: schedEnd
-    };
+    if (schedDay.length === 0) {
+        alert("Uhm.. Select at least one!");
+        return;
+    }
 
-    globalSchedule.push(scheduleObjects);
-
+    schedDay.forEach((checkbox, index) => {
+        const scheduleObjects = {
+            id: Date.now() + index,
+            label: schedLabel,
+            day: checkbox.value,
+            start: schedStart,
+            end: schedEnd
+        };
+        
+        globalSchedule.push(scheduleObjects);
+    });
+    
     localStorage.setItem('timetable-data', JSON.stringify(globalSchedule));
 
+    document.querySelectorAll('#block-day input[type="checkbox"]').forEach(cb => cb.checked = false);
     blockLabel.value = '';
     blockStart.value = '';
     blockEnd.value = '';
