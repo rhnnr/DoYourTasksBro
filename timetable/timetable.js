@@ -7,6 +7,19 @@ const blockStart = document.getElementById('block-start');
 const blockEnd = document.getElementById('block-end');
 const timetableData = localStorage.getItem('timetable-data');
 
+if(localStorage.getItem('sidebar_closed') === 'true') {
+    sideBar.classList.add('close');
+    toggleButton.classList.add('rotate')
+}
+
+
+function toggleSidebar() {
+    const isClosed = sideBar.classList.toggle('close');
+    toggleButton.classList.toggle('rotate');
+    localStorage.setItem('sidebar_closed', isClosed);
+}
+
+
 if (timetableData !== null) {
     globalSchedule = JSON.parse(timetableData);
 } else {
