@@ -7,6 +7,9 @@ const blockStart = document.getElementById('block-start');
 const blockEnd = document.getElementById('block-end');
 const timetableData = localStorage.getItem('timetable-data');
 
+const toggleButton = document.getElementById('toggle-btn')
+const sideBar = document.getElementById('sidebar')
+
 if(localStorage.getItem('sidebar_closed') === 'true') {
     sideBar.classList.add('close');
     toggleButton.classList.add('rotate')
