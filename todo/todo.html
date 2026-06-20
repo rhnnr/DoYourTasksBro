@@ -51,7 +51,14 @@
                 Load score: <span id="score-number">0</span>
             </div>
             <form id="task-form">
-                <input type="text" id="task-input" placeholder="Type a commitment, Bro..."/>
+                <div class="input-wrapper">
+                    <input type="text" id="task-input" placeholder="Type a commitment, Bro..."/>
+                    <div id="counter-wrapper">
+                        <span id="live-weight-counter">0</span> pts
+                    </div>
+                    
+                </div>
+                
                 <input type="date" id="task-deadline"/>
                 <button type="submit" id="task-add">Add Task</button>
             </form>

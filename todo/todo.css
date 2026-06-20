@@ -80,10 +80,19 @@
     max-width: 500px;
     gap: 10px;
     margin: 0 auto;
+
+    align-items: start;
+}
+
+.input-wrapper
+{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 #task-input {
-    flex: 1;
+    width: 100%;
     padding: 14px 20px;
     font-size: 1rem;
     border-radius: 8px;
@@ -104,7 +113,7 @@
     font-size: 1rem;
     font-weight: 700;
     border-radius: 8px;
-    border: none;
+    border: 2px solid transparent;
     background-color: #ffffff;
     color: #0f172a;
     cursor: pointer;
@@ -252,6 +261,10 @@ body.theme-overload {
     color: var(--text-main);
     position: relative;
     text-align: center;
+
+    padding: 14px 10px;
+    font-size: 1rem;
+    box-sizing: border-box;
 }
 
 #task-deadline::-webkit-calendar-picker-indicator {
@@ -275,6 +288,15 @@ body.theme-overload {
 
 body.theme-overload #gravity-board {
     animation: board-rattle 0.25s infinite linear;
+}
+
+#counter-wrapper
+{
+    color: var(--text-second);
+    font-family: monospace;
+    margin-top: 6px;
+    padding-left: 4px;
+    font-size: 0.8rem;
 }
 
 @media (max-width: 800px) {

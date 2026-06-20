@@ -1,36 +1,12 @@
 let taskList = []; // the global array
 
-const storedWarn = localStorage.getItem('todo_warn_threshold');
-const storedOverload = localStorage.getItem('todo_overload_threshold');
-
-const warningThreshold = storedWarn !== null ? Number(storedWarn) : 300;
-const overloadThreshold = storedOverload !== null ? Number(storedOverload) : 600;
-
-const savedData = localStorage.getItem('doyourtasksbro_data');
-
-const toggleButton = document.getElementById('toggle-btn')
-const sideBar = document.getElementById('sidebar')
-
-const taskForm = document.getElementById('task-form');
-const taskInput = document.getElementById('task-input'); // Input field
-const taskAdd = document.getElementById('task-add');
-const taskDeadline = document.getElementById('task-deadline');
-const scoreNum = document.getElementById('score-number');
-const gravityBoard = document.getElementById('gravity-board');
-
-
-if (savedData !== null) {
-    taskList = JSON.parse(savedData);
-} else {
-    taskList = [];
-}
-
+const toggleButton = document.getElementById('toggle-btn');
+const sideBar = document.getElementById('sidebar');
 
 if(localStorage.getItem('sidebar_closed') === 'true') {
     sideBar.classList.add('close');
-    toggleButton.classList.add('rotate')
+    toggleButton.classList.add('rotate');
 }
-
 
 function toggleSidebar() {
     const isClosed = sideBar.classList.toggle('close');
@@ -38,6 +14,31 @@ function toggleSidebar() {
     localStorage.setItem('sidebar_closed', isClosed);
 }
 
+const storedWarn = localStorage.getItem('todo_warn_threshold');
+const storedOverload = localStorage.getItem('todo_overload_threshold');
+const warningThreshold = storedWarn !== null ? Number(storedWarn) : 300;
+const overloadThreshold = storedOverload !== null ? Number(storedOverload) : 600;
+
+const savedData = localStorage.getItem('doyourtasksbro_data');
+
+const taskForm = document.getElementById('task-form');
+const taskInput = document.getElementById('task-input'); // Input field
+const taskAdd = document.getElementById('task-add');
+const taskDeadline = document.getElementById('task-deadline');
+const scoreNum = document.getElementById('score-number');
+const gravityBoard = document.getElementById('gravity-board');
+const liveCounter = document.getElementById('live-weight-counter');
+
+if (savedData !== null) {
+    taskList = JSON.parse(savedData);
+} else {
+    taskList = [];
+}
+
+taskInput.addEventListener('input', () => {
+    const currentTextLength = taskInput.value.length;
+    liveCounter.textContent = currentTextLength;
+});
 
 
 taskForm.addEventListener('submit', (e) => {
@@ -59,6 +60,7 @@ taskForm.addEventListener('submit', (e) => {
     renderBoard(); // call to render
     taskInput.value = '';
     taskDeadline.value = '';
+    liveCounter.textContent = 0;
     updateGlobalMetrics(); // update the global metrics
     console.log(taskList);
 
