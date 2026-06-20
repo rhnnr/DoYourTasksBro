@@ -425,7 +425,9 @@ body.light-mode #schedule-form input[type="time"]::-webkit-calendar-picker-indic
 
     .form-row:last-child
     {
-        flex-direction: row;
+        display: flex !important;
+        gap: 8px;
+        width: 100%;
         flex-wrap: wrap;
     }
 
@@ -472,19 +474,19 @@ body.light-mode #schedule-form input[type="time"]::-webkit-calendar-picker-indic
     #block-start, 
     #block-end
     {
-        width: calc(50% - 6px);
-        flex: none;
+        min-width: 0;
+        flex: 1 1 calc(50% - 4px);
         height: 46px;
-        padding: 10px;
-        font-size: 0.9rem;
+        padding: 0 4px;
+        font-size: 0.75rem;
+        box-sizing: border-box;
     }
 
     #block-add
     {
-        width: 100%;
-        flex: none;
-        height: 46px;
-        margin-top: 0;
+        height: 42px;
+        flex: 1 1 100%;
+        margin-top: 2px;
         padding: 0;
         font-size: 0.95rem;
     }
