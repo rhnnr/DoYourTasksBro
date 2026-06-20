@@ -143,6 +143,7 @@ input[type="number"]
     {
         padding: 24px;
         box-sizing: border-box;
+        margin-bottom: 120px;
     }
 
     .setting-row
@@ -150,6 +151,7 @@ input[type="number"]
         flex-direction: column;
         align-items: stretch;
         gap: 12px;
+        margin-top: 20px;
     }
 
     #input-warn-threshold,
@@ -157,6 +159,7 @@ input[type="number"]
     {
         width: 100%;
         box-sizing: border-box;
+        padding: 12px;
     }
 
     .settings-danger-zone 
@@ -165,11 +168,17 @@ input[type="number"]
         align-items: stretch;
         text-align: center;
         gap: 20px;
-        padding: 20px;
+        padding: 24px;
+        margin-top: 30px;
+        height: auto;
+        min-height: min-content;
     }
 
     #clear-history-btn 
     {
         width: 100%;
+        padding: 16px;
+        margin: 0;
+        box-sizing: border-box;
     }
 }
