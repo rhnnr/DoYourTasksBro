@@ -51,6 +51,18 @@
     margin: 0 auto;
 }
 
+#todo-view
+{
+    width: 100%;
+
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+
+    align-items: stretch;
+    text-align: center;
+}
+
 #control-panel {
     display: flex;
     flex-direction: column;
@@ -82,6 +94,7 @@
     margin: 0 auto;
 
     align-items: start;
+    margin-bottom: 40px;
 }
 
 .input-wrapper
@@ -299,6 +312,93 @@ body.theme-overload #gravity-board {
     font-size: 0.8rem;
 }
 
+#history-section
+{
+    padding: 0 20px;
+    margin-top: 10px;
+}
+
+#history-section h2,
+#history-section h1
+{
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-second);
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: -0.03rem;
+    text-align: center;
+}
+
+#history-log
+{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid var(--sidebar-border);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.history-item 
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    color: var(--text-second);
+    font-size: 0.95rem;
+    text-decoration: line-through;
+    transition: all 0.2s ease;
+}
+
+.history-item:hover
+{
+    background-color: rgba(255, 255, 255, 0.04);
+    color: var(--text-main);
+}
+
+.hidden
+{
+    display: none !important;
+}
+
+.view-tabs
+{
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.tab-btn
+{
+    background: none;
+    border: none;
+    color: var(--text-second);
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover
+{
+    color: var(--text-main);
+}
+
+.tab-btn.active
+{
+    color: var(--text-main);
+    border-bottom-color: var(--selected-bg);
+}
+
 @media (max-width: 800px) {
     header h1 {
         padding-top: 0.5em;
@@ -313,11 +413,24 @@ body.theme-overload #gravity-board {
         flex-direction: column;
         gap: 12px;
         margin: 0 auto;
+        width: 100%;
+        max-width: 100%;
+        align-items: stretch; 
+    }
+
+    .input-wrapper {
+        width: 100%;
     }
 
     #task-input {
         width: 100%;
-        padding: 12px 6px;
+        padding: 12px 16px;
+    }
+
+    #task-deadline {
+        width: 100%;
+        padding: 12px 16px; 
+        box-sizing: border-box;
     }
 
     #task-form button {
@@ -339,9 +452,5 @@ body.theme-overload #gravity-board {
         width: 100%;
         max-width: 100%;
         font-size: 0.8rem;
-    }
-
-    #task-deadline {
-        height: 30px;
     }
 }

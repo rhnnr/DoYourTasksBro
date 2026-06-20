@@ -1,4 +1,5 @@
 let taskList = []; // the global array
+let taskHistory = [];
 
 const toggleButton = document.getElementById('toggle-btn');
 const sideBar = document.getElementById('sidebar');
@@ -29,6 +30,19 @@ const scoreNum = document.getElementById('score-number');
 const gravityBoard = document.getElementById('gravity-board');
 const liveCounter = document.getElementById('live-weight-counter');
 
+const savedHistory = localStorage.getItem('doyourtasksbro_history');
+
+const todoView = document.getElementById('todo-view');
+const historyView = document.getElementById('history-section');
+const tabTodo = document.getElementById('tab-todo');
+const tabHistory = document.getElementById('tab-history');
+
+if (savedHistory !== null) {
+    taskHistory = JSON.parse(savedHistory);
+} else {
+    taskHistory = [];
+}
+
 if (savedData !== null) {
     taskList = JSON.parse(savedData);
 } else {
@@ -57,11 +71,15 @@ taskForm.addEventListener('submit', (e) => {
     };
 
     taskList.push(taskObject); // pushing a variable to the global array
+    
     renderBoard(); // call to render
+    
     taskInput.value = '';
     taskDeadline.value = '';
     liveCounter.textContent = 0;
+
     updateGlobalMetrics(); // update the global metrics
+
     console.log(taskList);
 
     saveData();
@@ -113,11 +131,15 @@ function renderBoard() { // function declaration
         deleteBtn.textContent = 'Done';
         deleteBtn.classList.add('delete-btn');
         deleteBtn.addEventListener('click', () => {
+            task.completedAt = Date.now();
+            taskHistory.push(task);
+
             taskList = taskList.filter(taskItem => taskItem.id !== task.id); //remove task from the array
             renderBoard(); // re-render :)
             updateGlobalMetrics();
             saveData();
-            
+            localStorage.setItem('doyourtasksbro_history', JSON.stringify(taskHistory));
+            renderHistory();
         });        
         cardFooter.appendChild(deleteBtn);
         card.appendChild(cardFooter);
@@ -131,6 +153,7 @@ function renderBoard() { // function declaration
 
 renderBoard(); // clear any placeholder
 updateGlobalMetrics();
+renderHistory();
 
 
 function updateGlobalMetrics() {
@@ -165,3 +188,31 @@ function saveData() {
     const stringifiedVar = JSON.stringify(taskList);
     localStorage.setItem('doyourtasksbro_data', stringifiedVar);
 }
+
+function renderHistory() {
+    const historyLog = document.getElementById('history-log');
+    historyLog.innerHTML = '';
+
+    taskHistory.forEach(taskhistory => {
+        const historyList = document.createElement('p');
+        historyList.classList.add('history-item');
+        historyLog.appendChild(historyList);
+        historyList.textContent = taskhistory.text;
+    });
+}
+
+tabTodo.addEventListener('click', () => {
+    todoView.classList.remove('hidden');
+    historyView.classList.add('hidden');
+
+    tabTodo.classList.add('active');
+    tabHistory.classList.remove('active');
+});
+
+tabHistory.addEventListener('click', () => {
+    historyView.classList.remove('hidden');
+    todoView.classList.add('hidden');
+
+    tabHistory.classList.add('active');
+    tabTodo.classList.remove('active');
+});
