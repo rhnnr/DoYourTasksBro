@@ -376,18 +376,21 @@ body.light-mode #schedule-form input[type="time"]::-webkit-calendar-picker-indic
     /* Container adjustments */
     #app-container
     {
-        padding: 0 10px 90px 10px;
+        padding: 0 10px 80px 10px;
+        display: flex;
+        flex-direction: column;
     }
 
     /* Header compacting */
     #control-panel
     {
-        margin-bottom: 15px;
+        margin-bottom: 5px;
+        flex-shrink: 0;
     }
 
     #control-panel h1
     {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
         margin-bottom: 10px;
         padding-top: 10px;
     }
@@ -401,15 +404,16 @@ body.light-mode #schedule-form input[type="time"]::-webkit-calendar-picker-indic
     /* Ultra-compact Form */
     #schedule-form
     {
-        padding: 15px;
-        gap: 12px;
+        padding: 12px;
+        gap: 10px;
         margin-top: 5px;
         border-radius: 12px;
+        flex-shrink: 0;
     }
 
     .form-row
     {
-        gap: 12px;
+        gap: 10px;
         width: 100%;
     }
 
