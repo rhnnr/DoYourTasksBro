@@ -17,6 +17,8 @@ const inputOverloadThreshold = document.getElementById('input-overload-threshold
 const savedWarn = localStorage.getItem('todo_warn_threshold') || 300;
 const savedOverload = localStorage.getItem('todo_overload_threshold') || 600;
 
+const deleteHistory = document.getElementById('clear-history-btn');
+
 inputWarnThreshold.value = savedWarn;
 inputOverloadThreshold.value = savedOverload;
 
@@ -26,4 +28,13 @@ inputWarnThreshold.addEventListener('input', () => {
 
 inputOverloadThreshold.addEventListener('input', () => {
     localStorage.setItem('todo_overload_threshold', inputOverloadThreshold.value);
+});
+
+deleteHistory.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (!confirm("Delete history?")) {
+        event.preventDefault();
+    } else {
+        localStorage.removeItem('doyourtasksbro_history');
+    }
 });

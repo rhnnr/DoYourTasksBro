@@ -1,13 +1,14 @@
+/* style.css */
 :root
 {
-    --main-bg: #0B1020;
-    --sidebar-bg: #121829;
-    --sidebar-border: #30363d;
-    --text-main: #E9F1FF;
-    --text-second: #64748B;
-    --hover-clr: #161F35;
-    --selected-bg: #425070;
-    --selected-text: #FFFFFF;
+    --main-bg: #050505;
+    --sidebar-bg: #0a0a0a;
+    --sidebar-border: #1f1f1f;
+    --text-main: #f8fafc;
+    --text-second: #94a3b8;
+    --hover-clr: #171717;
+    --selected-bg: #3b82f6;
+    --selected-text: #ffffff;
 }
 
 *
@@ -19,7 +20,7 @@
 
 html
 {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     line-height: 1.5rem;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -33,100 +34,143 @@ body
     color: var(--text-main);
     display: block;
     padding-top: 40px;
-
-    background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 32px 32px;
-    background-position: center;
+    background-image: radial-gradient(circle at 50% 0%, #1f1f1f 1px, transparent 1px);
+    background-size: 40px 40px;
 }
 
 #sidebar
 {
     box-sizing: border-box;
     height: 100vh;
-    width: 250px;
-    padding: 6px 1em;
+    width: 280px;
+    padding: 12px 1.5em;
     background-color: var(--sidebar-bg);
     border-right: 1px solid var(--sidebar-border);
-
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
-
-    transition: 300ms ease-in-out;
+    transition: 300ms cubic-bezier(0.16, 1, 0.3, 1);
     overflow: hidden;
     text-wrap: nowrap;
 }
 
-#sidebar.close 
+#sidebar.close
 {
-    padding: 6px;
-    width: 60px;
+    padding: 12px 8px;
+    width: 72px;
 }
 
 #sidebar ul
 {
-    list-style: none;   
+    list-style: none;
 }
 
 #sidebar > ul > li:first-child
 {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 16px;
+    align-items: center;
+    min-height: 52px;
+    margin-bottom: 24px;
 }
 
 #sidebar ul li.active a
 {
     color: var(--selected-bg);
-    
-    svg{
-        fill: var(--selected-bg)
-    }
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: var(--selected-bg);
 }
 
-#sidebar a,
+#sidebar ul li.active a svg
+{
+    fill: var(--selected-bg);
+}
+
+#sidebar a
+{
+    border-radius: 8px;
+    padding: 1em;
+    text-decoration: none;
+    color: var(--text-second);
+    display: flex;
+    align-items: center;
+    gap: 2.5em;
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    min-height: 56px;
+}
+
 #sidebar .logo
 {
-    border: 0.5em;
     padding: 0.85em;
     text-decoration: none;
     color: var(--text-main);
     display: flex;
     align-items: center;
-    gap: 1em;
+    gap: 2.5em;
+}
+
+#sidebar.close .logo,
+#sidebar.close a span
+{
+    display: none;
+}
+
+#sidebar.close > ul > li:first-child
+{
+    justify-content: center;
+}
+
+#sidebar.close #toggle-btn
+{
+    margin-left: 0;
 }
 
 #sidebar svg
 {
     flex-shrink: 0;
-    fill: var(--text-main);
+    fill: var(--text-second);
+    transition: fill 0.2s ease;
 }
 
 #sidebar a span
 {
     flex-grow: 1;
+    letter-spacing: 0.02em;
 }
 
 #sidebar a:hover
 {
     background-color: var(--hover-clr);
+    color: var(--text-main);
+    border-color: var(--sidebar-border);
+}
+
+#sidebar a:hover svg
+{
+    fill: var(--text-main);
 }
 
 #toggle-btn
 {
     margin-left: auto;
-    padding: 1em;
-    border: none;
-    border-radius: .5em;
-    background: none;
+    padding: 0.8em;
+    border: 1px solid var(--sidebar-border);
+    border-radius: 8px;
+    background: var(--main-bg);
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
 
-    svg{
-        transition: rotate 150ms ease;
-    }
+#toggle-btn svg
+{
+    transition: rotate 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    fill: var(--text-main);
 }
 
 #toggle-btn.rotate svg
@@ -137,32 +181,41 @@ body
 #toggle-btn:hover
 {
     background-color: var(--hover-clr);
+    border-color: #3b82f6;
 }
 
 main
 {
     padding-top: 0;
-    margin-left: 60px;
+    margin-left: 72px;
 }
 
 main p
 {
-    margin-top: 5px;
-    margin-bottom: 15px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+    color: var(--text-second);
+    line-height: 1.8;
 }
 
 .container
 {
+    background-color: var(--sidebar-bg);
     border: 1px solid var(--sidebar-border);
-    border-radius: 1em;
-    padding: 35px;
+    border-radius: 12px;
+    padding: 40px;
+    max-width: 1000px;
+    width: 90%;
+    margin: 0 auto 30px auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
 
-    max-width: 1200px;
-    width: 100%;
-    margin: 0 auto 20px auto;
-
-    h2, p { margin-top: 1em }
-
+.container h2
+{
+    margin-top: 0.5em;
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
 }
 
 .container p
@@ -172,33 +225,40 @@ main p
 
 .home-title
 {
-    font-size: 2.5rem;
-    font-weight: 800;
+    font-size: 3.5rem;
+    font-weight: 900;
     letter-spacing: -0.05em;
     text-align: center;
-
-    margin-bottom: 40px;
-    margin-top: 20px;
-
+    margin-bottom: 50px;
+    margin-top: 30px;
     max-width: 1200px;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
+    background: linear-gradient(to right, #ffffff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+    padding-bottom: 10px;
 }
 
-@keyframes velocityEntrance {
-    0% {
+@keyframes velocityEntrance
+{
+    0%
+    {
         opacity: 0;
-        transform: translateY(15px) scale(0.98);
+        transform: translateY(20px) scale(0.98);
     }
-    100% {
+    100%
+    {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
 }
 
-.bro-landing {
-    animation: velocityEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.bro-landing
+{
+    animation: velocityEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     will-change: transform, opacity;
 }
 
@@ -208,64 +268,91 @@ main p
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
 }
 
 .tier-list li
 {
-    padding-left: 0;
-    margin-bottom: 12px;
+    padding-left: 1;
+    margin-bottom: 0;
     line-height: 1.6;
 }
 
 .tier-card
 {
-    background-color: rgba(255, 255, 255, 0.03);
-    border: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--sidebar-border);
     border-radius: 8px;
-    line-height: 1.5;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .tier-safe
 {
-    border-left: 4px solid #2ecc71;
+    border-left: 4px solid #22c55e;
 }
 
 .tier-warning
 {
-    border-left: 4px solid #f1c40f;
+    border-left: 4px solid #f59e0b;
 }
 
 .tier-overload
 {
-    border-left: 4px solid #e74c3c;
+    border-left: 4px solid #ef4444;
 }
 
 @media(max-width: 800px)
 {
     body
     {
-        grid-template-columns: 1fr;
-        align-items: flex-start;
-        padding: 20px 10px;
+        display: block; 
+        padding: 15px;
+        overflow-x: hidden;
+    }
+
+    .home-title
+    {
+        font-size: 2.2rem;
+        margin-top: 10px;
+        margin-bottom: 30px;
     }
 
     main
     {
         margin-left: 0;
-        padding-bottom: 80px;
+        padding-bottom: 100px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .container
     {
-        border: none;
-        padding: 0;
+        border: 1px solid var(--sidebar-border);
+        padding: 24px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .container h2
+    {
+        font-size: 1.5rem;
+    }
+
+    .container p
+    {
+        font-size: 0.9rem;
+    }
+
+    .tier-card
+    {
+        font-size: 0.9rem;
     }
 
     #sidebar,
     #sidebar.close
     {
-        height: 60px;
+        height: 70px;
         width: 100%;
         border-right: none;
         border-top: 1px solid var(--sidebar-border);
@@ -273,36 +360,47 @@ main p
         position: fixed;
         top: auto;
         bottom: 0;
-        
-        > ul
-        {
-            padding: 0;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-auto-rows: 60px;
-            align-items: center;
-            overflow-x: visible;
-        }
-
-        ul li 
-        {
-            height: 100%;
-        }
-
-        ul a
-        {
-            width: 100%;
-            height: 60px;
-            padding: 0;
-            border-radius: 0;
-            justify-content: center;
-        }
-
-        ul li span,
-        ul li:first-child
-        {
-            display: none;
-        }
+        left: 0; /* Forces the nav to stick exactly to the left edge */
+        background-color: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
     }
     
+    #sidebar > ul
+    {
+        padding: 0;
+        margin: 0;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        justify-content: space-around; /* Distributes icons perfectly */
+        align-items: center;
+    }
+
+    #sidebar ul li
+    {
+        height: 100%;
+        flex: 1;
+    }
+
+    #sidebar ul a
+    {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        border-radius: 0;
+        border: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #sidebar ul li span
+    {
+        display: none !important;
+    }
+    
+    #sidebar > ul > li:first-child
+    {
+        display: none !important;
+    }
 }
