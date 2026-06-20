@@ -1,0 +1,62 @@
+:root
+{
+    --main-bg: #0B1020;
+    --sidebar-bg: #121829;
+    --sidebar-border: #30363d;
+    --text-main: #E9F1FF;
+    --text-second: #64748B;
+    --hover-clr: #161F35;
+    --selected-bg: #425070;
+    --selected-text: #FFFFFF;
+}
+
+#todo-settings
+{
+    padding: 25px;
+    margin-bottom: 25px;
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.02);
+    color: inherit;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.setting-row
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#input-warn-threshold,
+#input-overload-threshold
+{
+    padding: 10px 15px;
+    width: 100px;
+    
+    font-size: 1rem;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: inherit;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}

@@ -44,10 +44,23 @@
     </nav>
     <main class="bro-landing" id="app-container">
         <h1 class="home-title">Settings</h1>
-        <div>
-            
+        <div id="todo-settings">
+            <h2>Todo List</h2>
+            <div>
+                <label class="setting-row">
+                    Warning Threshold: <input type="number" id="input-warn-threshold" min="1" step="50">
+                </label>
+            </div>
+            <div>
+                <label class="setting-row">
+                    Overload Threshold: <input type="number" id="input-overload-threshold" min="1" step="50">
+                </label>
+            </div>
         </div>
 
+        <div id="timetable-settings">
+            <h2>Time Table</h2>
+        </div>
     </main>
 </body>
 </html>

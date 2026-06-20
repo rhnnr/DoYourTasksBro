@@ -1,7 +1,10 @@
 let taskList = []; // the global array
 
-const warningThreshold = 300;
-const overloadThreshold = 600;
+const storedWarn = localStorage.getItem('todo_warn_threshold');
+const storedOverload = localStorage.getItem('todo_overload_threshold');
+
+const warningThreshold = storedWarn !== null ? Number(storedWarn) : 300;
+const overloadThreshold = storedOverload !== null ? Number(storedOverload) : 600;
 
 const savedData = localStorage.getItem('doyourtasksbro_data');
 
