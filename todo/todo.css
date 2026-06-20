@@ -1,5 +1,4 @@
-:root
-{
+:root {
     --main-bg: #0B1020;
     --sidebar-bg: #121829;
     --sidebar-border: #30363d;
@@ -34,8 +33,7 @@
     --overload-hover-border: #FF66E3;
 }
 
-#gravity-board 
-{
+#gravity-board {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 25px;
@@ -46,16 +44,14 @@
     align-content: start;
 }
 
-#app-container
-{
+#app-container {
     width: 100%;
     max-width: 1600px;
     padding: 0 20px;
     margin: 0 auto;
 }
 
-#control-panel 
-{
+#control-panel {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -63,8 +59,7 @@
     margin-bottom: 40px;
 }
 
-#load-status 
-{
+#load-status {
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 25px;
@@ -73,23 +68,21 @@
     opacity: 0.9;
 }
 
-#score-number 
-{
+#score-number {
     font-size: 1.5rem;
     font-weight: 800;
     margin-left: 5px;
 }
 
-#task-form 
-{
+#task-form {
     display: flex;
     width: 100%;
     max-width: 500px;
     gap: 10px;
+    margin: 0 auto;
 }
 
-#task-input 
-{
+#task-input {
     flex: 1;
     padding: 14px 20px;
     font-size: 1rem;
@@ -101,14 +94,12 @@
     transition: all 0.3s ease;
 }
 
-#task-input:focus 
-{
+#task-input:focus {
     border-color: rgba(255, 255, 255, 0.4);
     background-color: rgba(255, 255, 255, 0.08);
 }
 
-#task-form button 
-{
+#task-form button {
     padding: 14px 24px;
     font-size: 1rem;
     font-weight: 700;
@@ -120,77 +111,64 @@
     transition: all 0.2s ease;
 }
 
-#task-form button:hover 
-{
+#task-form button:hover {
     transform: translateY(-1px);
     opacity: 0.9;
 }
 
-#task-form button:active 
-{
+#task-form button:active {
     transform: translateY(1px);
 }
 
-.card
-{
+.card {
     font-size: 1rem;
     padding: 10px;
-
     word-break: break-word;
     overflow-wrap: break-word;
     width: 100%;
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     border-radius: 8px;
     gap: 10px;
     height: 150px;
-
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(4px);
 }
 
-.card.card-low:hover
-{
+.card.card-low:hover {
     transform: translateY(-4px);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
     background-color: var(--safe-hover-bg);
     border-color: var(--safe-hover-border);
 }
 
-.card.card-mid:hover
-{
+.card.card-mid:hover {
     transform: translateY(-4px);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
     background-color: var(--warn-hover-bg);
     border-color: var(--warn-hover-border);
 }
 
-.card.card-high:hover
-{
+.card.card-high:hover {
     transform: translateY(-4px);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
     background-color: var(--overload-hover-bg);
     border-color: var(--overload-hover-border);
 }
 
-.card p
-{
+.card p {
     line-height: 1.4;
     font-weight: 500;
     overflow-y: auto;
-
     flex: 1;
     margin-bottom: 8px;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    
     text-align: justify;
 }
 
-.delete-btn
-{
+.delete-btn {
     padding: 6px 14px;
     font-size: 0.8rem;
     font-weight: 700;
@@ -203,68 +181,60 @@
     margin-left: auto;
 }
 
-.delete-btn:hover
-{
+.delete-btn:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-header h1
-{
+header h1 {
     font-size: 2.5rem;
     font-weight: 800;
     letter-spacing: -0.05em;
     margin-bottom: 10px;
+    text-align: center;
+    width: 100%;
 }
 
-body.theme-safe 
-{
+body.theme-safe {
     background-color: var(--safe-bg);
     color: var(--card-safe-text);
     transition: background-color 0.5s ease; 
 }
 
-body.theme-warning 
-{
+body.theme-warning {
     background-color: var(--warning-bg); 
     color: var(--card-warn-text);
     transition: background-color 0.5s ease;
 }
 
-body.theme-overload 
-{
+body.theme-overload {
     background-color: var(--overload-bg); 
     color: var(--card-overload-text);
     transition: background-color 0.2s ease; 
 }
 
-.card.card-low
-{
+.card.card-low {
     background-color: var(--card-safe-bg); 
     border: 2px solid var(--card-safe-border);
 }
 
-.card.card-mid
-{
+.card.card-mid {
     background-color: var(--card-warn-bg);
     border: 2px solid var(--card-warn-border);
 }
 
-.card.card-high
-{
+.card.card-high {
     background-color: var(--card-overload-bg); 
     border: 2px solid var(--card-overload-border);
 }
 
-.card-footer
-{
+.card-footer {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.card-deadline
-{
+.card-deadline {
     font-size: 0.8rem;
     color: var(--text-second);
     font-weight: 650;
@@ -275,8 +245,7 @@ body.theme-overload
     align-items: center;
 }
 
-#task-deadline
-{
+#task-deadline {
     background-color: rgba(255, 255, 255, 0.05);
     border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
@@ -285,8 +254,7 @@ body.theme-overload
     text-align: center;
 }
 
-#task-deadline::-webkit-calendar-picker-indicator
-{
+#task-deadline::-webkit-calendar-picker-indicator {
     position: absolute;
     left: 0;
     top: 0;
@@ -296,8 +264,7 @@ body.theme-overload
     cursor: pointer;
 }
 
-@keyframes board-rattle 
-{
+@keyframes board-rattle {
     0% { transform: translate(1px, 1px) rotate(0deg); }
     20% { transform: translate(-2px, -1px) rotate(-0.5deg); }
     40% { transform: translate(-1px, 1px) rotate(0.5deg); }
@@ -306,66 +273,53 @@ body.theme-overload
     100% { transform: translate(1px, 1px) rotate(0deg); }
 }
 
-body.theme-overload #gravity-board 
-{
+body.theme-overload #gravity-board {
     animation: board-rattle 0.25s infinite linear;
 }
 
-@media (max-width: 800px)
-{
-
-
-
-    h1
-    {
+@media (max-width: 800px) {
+    header h1 {
         padding-top: 0.5em;
         font-size: 2rem;
     }
 
-    #app-container
-    {
+    #app-container {
         padding: 0 10px;
     }
 
-    #task-form
-    {
+    #task-form {
         flex-direction: column;
         gap: 12px;
+        margin: 0 auto;
     }
 
-    #task-input
-    {
+    #task-input {
         width: 100%;
         padding: 12px 6px;
     }
 
-    #task-form button
-    {
+    #task-form button {
         width: 100%;
         padding: 12px;
     }
 
-    #gravity-board
-    {
+    #gravity-board {
         justify-content: center;
         padding: 10px 0;
         gap: 16px;
-
         padding-top: 10px;
         padding-left: 0;
         padding-right: 0;
         padding-bottom: 90px;
     }
 
-    .card
-    {
+    .card {
         width: 100%;
         max-width: 100%;
         font-size: 0.8rem;
     }
 
-    #task-deadline
-    {
+    #task-deadline {
         height: 30px;
     }
-} 
+}

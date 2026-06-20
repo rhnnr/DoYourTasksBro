@@ -85,7 +85,7 @@ function renderBoard() { // function declaration
         const cardFooter = document.createElement('div');
         cardFooter.classList.add('card-footer');
 
-        if (task.deadline.length > 0) {
+        if (task.deadline && task.deadline.length > 0) {
             const deadline = document.createElement('span');
             deadline.textContent = task.deadline;
             deadline.classList.add('card-deadline');
