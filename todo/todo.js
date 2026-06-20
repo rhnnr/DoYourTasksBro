@@ -69,6 +69,19 @@ taskForm.addEventListener('submit', (e) => {
 
 
 function renderBoard() { // function declaration
+    taskList.sort((a, b) => {
+        if (a.deadline === '' && b.deadline === '') {
+            return 0;
+        }
+        if (a.deadline === '') {
+            return 1;
+        }
+        if (b.deadline === '') {
+            return -1;
+        }
+        return new Date(a.deadline) - new Date(b.deadline);
+    });
+
     gravityBoard.innerHTML = ''; // clear the board before rendering
 
     taskList.forEach(task => {
