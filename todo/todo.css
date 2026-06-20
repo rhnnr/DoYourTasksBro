@@ -483,6 +483,24 @@ body.theme-overload #gravity-board
     box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 
+body.light-mode
+{
+    --safe-bg: #f8fafc;
+    --card-safe-bg: #ffffff;
+    --card-safe-text: #0f172a;
+    --safe-hover-bg: #f0fdf4;
+
+    --warning-bg: #fffbeb;
+    --card-warn-bg: #ffffff;
+    --card-warn-text: #0f172a;
+    --warn-hover-bg: #fef3c7;
+
+    --overload-bg: #fef2f2;
+    --card-overload-bg: #ffffff;
+    --card-overload-text: #0f172a;
+    --overload-hover-bg: #fee2e2;
+}
+
 @media (max-width: 800px)
 {
     header h1

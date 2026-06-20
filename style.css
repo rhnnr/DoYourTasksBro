@@ -36,6 +36,7 @@ body
     padding-top: 40px;
     background-image: radial-gradient(circle at 50% 0%, #1f1f1f 1px, transparent 1px);
     background-size: 40px 40px;
+    transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 #sidebar
@@ -302,6 +303,104 @@ main p
     border-left: 4px solid #ef4444;
 }
 
+body.light-mode
+{
+    --main-bg: #f8fafc;
+    --sidebar-bg: #ffffff;
+    --sidebar-border: #e2e8f0;
+    --text-main: #0f172a;
+    --text-second: #64748b;
+    --hover-clr: #f1f5f9;
+    background-image: radial-gradient(circle at 50% 0%, #cbd5e1 1px, transparent 1px);
+}
+
+body.light-mode .home-title
+{
+    background: linear-gradient(to right, #0f172a, #64748b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.theme-switch-wrapper
+{
+    position: fixed;
+    top: 30px;
+    right: 40px;
+    z-index: 9999;
+}
+
+.theme-switch
+{
+    display: inline-block;
+    cursor: pointer;
+}
+
+.theme-switch input
+{
+    display: none;
+}
+
+.switch-track
+{
+    width: 64px;
+    height: 32px;
+    background-color: var(--sidebar-bg);
+    border: 1px solid var(--sidebar-border);
+    border-radius: 32px;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.switch-thumb
+{
+    width: 24px;
+    height: 24px;
+    background-color: var(--text-main);
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 4px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-switch input:checked + .switch-track .switch-thumb
+{
+    transform: translateX(30px);
+}
+
+.moon-icon, 
+.sun-icon
+{
+    width: 16px;
+    height: 16px;
+    fill: var(--main-bg);
+    position: absolute;
+    transition: all 0.4s ease;
+}
+
+.sun-icon
+{
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+}
+
+.theme-switch input:checked + .switch-track .switch-thumb .moon-icon
+{
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+}
+
+.theme-switch input:checked + .switch-track .switch-thumb .sun-icon
+{
+    opacity: 1;
+    transform: rotate(0) scale(1);
+}
+
+
 @media(max-width: 800px)
 {
     body
@@ -403,4 +502,11 @@ main p
     {
         display: none !important;
     }
+    
+    .theme-switch-wrapper
+    {
+        top: 20px;
+        right: 20px;
+    }
+
 }

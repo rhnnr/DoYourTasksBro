@@ -360,6 +360,16 @@
     color: #ffffff;
     background-color: #ef4444;
 }
+body.light-mode #schedule-form input[type="time"]::-webkit-calendar-picker-indicator
+{
+    filter: invert(0); 
+    opacity: 0.6;
+}
+
+body.light-mode #schedule-form input[type="time"]::-webkit-calendar-picker-indicator:hover
+{
+    opacity: 1;
+}
 
 @media (max-width: 800px)
 {
@@ -541,7 +551,7 @@
     .card-text
     {
         font-size: 0.65rem;
-        white-space: normal; /* Allows text to wrap into multiple lines */
+        white-space: normal; /* Allows text to werap into multiple lines */
         overflow-wrap: anywhere; /* Forces wrapping on tiny screens */
         line-height: 1.1;
     }

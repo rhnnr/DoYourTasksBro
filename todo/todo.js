@@ -216,3 +216,23 @@ tabHistory.addEventListener('click', () => {
     tabHistory.classList.add('active');
     tabTodo.classList.remove('active');
 });
+
+// --- Global Theme Toggle ---
+const themeToggle = document.getElementById('theme-toggle');
+
+if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light-mode');
+    if (themeToggle) themeToggle.checked = true;
+}
+
+if (themeToggle) {
+    themeToggle.addEventListener('change', () => {
+        if (themeToggle.checked) {
+            document.body.classList.add('light-mode');
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.body.classList.remove('light-mode');
+            localStorage.setItem('theme', 'dark');
+        }
+    });
+}
