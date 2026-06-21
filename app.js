@@ -8,7 +8,6 @@ if(localStorage.getItem('sidebar_closed') === 'true') {
 
 function toggleSidebar() {
     const isClosed = sideBar.classList.toggle('close');
-    toggleButton.classList.toggle('rotate');
     localStorage.setItem('sidebar_closed', isClosed);
 }
 

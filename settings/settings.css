@@ -136,6 +136,89 @@ input[type="number"]
     display: none;
 }
 
+/*LIGHT MODE GRAAHH*/
+.theme-switch-wrapper 
+{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    position: static !important; 
+    margin: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+}
+
+.theme-switch
+{
+    display: inline-block;
+    cursor: pointer;
+}
+
+.theme-switch input
+{
+    display: none;
+}
+
+.switch-track
+{
+    width: 64px;
+    height: 32px;
+    background-color: var(--sidebar-bg);
+    border: 1px solid var(--sidebar-border);
+    border-radius: 32px;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.switch-thumb
+{
+    width: 24px;
+    height: 24px;
+    background-color: var(--text-main);
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 4px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-switch input:checked + .switch-track .switch-thumb
+{
+    transform: translateX(30px);
+}
+
+.moon-icon, 
+.sun-icon
+{
+    width: 16px;
+    height: 16px;
+    fill: var(--main-bg);
+    position: absolute;
+    transition: all 0.4s ease;
+}
+
+.sun-icon
+{
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+}
+
+.theme-switch input:checked + .switch-track .switch-thumb .moon-icon
+{
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+}
+
+.theme-switch input:checked + .switch-track .switch-thumb .sun-icon
+{
+    opacity: 1;
+    transform: rotate(0) scale(1);
+}
+
 @media (max-width: 800px)
 {
     #todo-settings
