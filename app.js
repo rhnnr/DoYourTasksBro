@@ -12,7 +12,6 @@ function toggleSidebar() {
     localStorage.setItem('sidebar_closed', isClosed);
 }
 
-// --- Global Theme Toggle ---
 const themeToggle = document.getElementById('theme-toggle');
 
 if (localStorage.getItem('theme') === 'light') {
