@@ -9,7 +9,11 @@
     <script src="settings.js" defer></script>
 </head>
 <body>
-
+    <script>
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode');
+        }
+    </script>
     <nav id="sidebar" class="close">
         <ul>
             <li>

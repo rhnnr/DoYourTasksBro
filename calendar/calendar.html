@@ -10,6 +10,11 @@
     <script src="calendar.js" defer></script>
 </head>
 <body>
+    <script>
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode');
+        }
+    </script>
     <div class="theme-switch-wrapper">
         <label class="theme-switch" for="theme-toggle">
             <input type="checkbox" id="theme-toggle">
@@ -95,7 +100,7 @@
         </div>
 
         <div class="container active-day-briefing">
-            <h2 class="briefing-title">Target: <span id="selected-date-label">Select a Date</span></h2>
+            <h2 class="briefing-title"><span id="selected-date-label">Select a Date</span></h2>
             <div id="filtered-task-deck" class="task-deck-placedholder">
                 No target selected. Click a solar card inside the grid.
             </div>

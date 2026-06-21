@@ -8,6 +8,11 @@
     <script src="app.js" defer></script>
 </head>
 <body>
+    <script>
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode');
+        }
+    </script>
     <div class="theme-switch-wrapper">
         <label class="theme-switch" for="theme-toggle">
             <input type="checkbox" id="theme-toggle">

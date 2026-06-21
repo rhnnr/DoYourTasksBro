@@ -104,6 +104,19 @@
     letter-spacing: 0.02em;
 }
 
+body.light-mode #ending-msg 
+{
+    background: linear-gradient(to right, #0f172a 20%, var(--text-second) 40%, #0f172a 60%, #0f172a 80%) !important;
+    background-size: 200% auto !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+body.light-mode #ending-msg:hover 
+{
+    text-shadow: 2px -1px 0 rgba(239, 68, 68, 0.5), -2px 1px 0 rgba(59, 130, 246, 0.5) !important;
+}
+
 @media (max-width: 800px) {
     .bro-landing .container {
         width: 100%;

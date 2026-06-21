@@ -91,8 +91,8 @@
 .calendar-day 
 {
     position: relative;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.03);
+    background: var(--card-item-bg);
+    border: 1px solid var(--sidebar-border);
     border-radius: 8px;
     min-height: 95px;
     padding: 10px;
@@ -106,7 +106,7 @@
 
 .calendar-day:hover:not(.empty) 
 {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--hover-clr);
     border-color: rgba(255, 255, 255, 0.15);
     transform: translateY(-2px);
 }
@@ -202,6 +202,36 @@
     color: var(--text-second);
     font-style: italic;
     font-size: 0.95rem;
+}
+
+body.light-mode .calendar-day.selected 
+{
+    border-color: #0f172a !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12) !important; 
+}
+
+body.light-mode .calendar-day:hover:not(.empty) 
+{
+    background-color: rgba(59, 130, 246, 0.05) !important; 
+    border-color: #cbd5e1 !important;                
+    transform: translateY(-4px) !important;             
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);           
+}
+
+body.light-mode .nav-btn 
+{
+    background: var(--hover-clr) !important;       
+    border: 1px solid var(--sidebar-border) !important; 
+    color: var(--text-main) !important;          
+    font-size: 1.1rem !important;                
+    font-weight: 700 !important;
+}
+
+body.light-mode .nav-btn:hover 
+{
+    background: var(--selected-bg) !important;    
+    border-color: var(--selected-bg) !important;
+    color: #ffffff !important;
 }
 
 @media (max-width: 800px) 

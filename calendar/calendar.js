@@ -108,12 +108,11 @@ function renderCalendarGrid(displayDate, taskList) {
             if (matchedTasks.length === 0) {
                 deck.innerHTML = `<div class="task-deck-placeholder">No tasks scheduled for this day.</div>`;
             } else {
-                deck.innerHTML = "";
                 matchedTasks.forEach(task => {
                     deck.innerHTML += `
-                        <div style="background: rgba(255, 255, 255, 0.02); margin-bottom: 8px; padding: 12px; border-radius: 6px; border-left: 4px solid var(--selected-bg); display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+                        <div style="background: var(--card-bg); margin-bottom: 8px; padding: 12px; border-radius: 6px; border: 1px solid var(--sidebar-border); border-left: 4px solid var(--selected-bg); display: flex; justify-content: space-between; align-items: center; gap: 16px;">
                             <span style="color: var(--text-main); font-weight: 500; text-align: left; word-break: break-word;">${task.text || "Untitled Task"}</span>
-                            <span style="color: var(--text-second); font-family: monospace; font-size: 0.85rem; padding: 4px 8px; background: rgba(0,0,0,0.3); border-radius: 4px; flex-shrink: 0; white-space: nowrap;">LOAD: ${task.weight || 0}</span>
+                            <span style="color: var(--text-second); font-family: monospace; font-size: 0.85rem; padding: 4px 8px; background: var(--hover-clr); border: 1px solid var(--sidebar-border); border-radius: 4px; flex-shrink: 0; white-space: nowrap;">LOAD: ${task.weight || 0}</span>
                         </div>`;
                 });
             }

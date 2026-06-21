@@ -8,6 +8,9 @@
     --hover-clr: #171717;
     --selected-bg: #3b82f6;
     --selected-text: #ffffff;
+    
+    --card-bg: rgba(255, 255, 255, 0.02);
+    --card-item-bg: rgba(0, 0, 0, 0.2);
 }
 
 *
@@ -330,14 +333,22 @@ body.light-mode
     --text-main: #0f172a;
     --text-second: #64748b;
     --hover-clr: #f1f5f9;
+
+    --card-bg: rgba(0, 0, 0, 0.02);
+    --card-item-bg: #ffffff;
     background-image: radial-gradient(circle at 50% 0%, #cbd5e1 1px, transparent 1px);
 }
 
-body.light-mode .home-title
+body.light-mode .home-title,
+body.light-mode #control-panel h1,
+body.light-mode header h1,
+body.light-mode main > h1,
+body.light-mode .bro-landing > h1 
 {
-    background: linear-gradient(to right, #0f172a, #64748b);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    background: linear-gradient(to right, #0f172a, #64748b) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    display: block !important;
 }
 
 .theme-switch-wrapper
