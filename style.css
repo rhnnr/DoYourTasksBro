@@ -125,6 +125,26 @@ body
     min-height: 56px;
 }
 
+.icon-box {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 2.5em; /* Space between icon and text */
+    flex-shrink: 0;
+}
+
+#sidebar.close .icon-box {
+    margin-right: 0;
+}
+
+#sidebar a svg {
+    display: block;
+    width: 24px;
+    height: 24px;
+}
+
 #sidebar .logo
 {
     padding: 0.85em;

@@ -38,3 +38,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     endingMsg.addEventListener("mouseenter", decodeText);
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sidebarLinks = document.querySelectorAll('#sidebar a');
+
+    sidebarLinks.forEach(link => {
+        const svg = link.querySelector('svg');
+        if (svg && !link.querySelector('.icon-box')) {
+            // Create the wrapper
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('icon-box');
+            
+            link.insertBefore(wrapper, svg);
+            wrapper.appendChild(svg);
+        }
+    });
+});
