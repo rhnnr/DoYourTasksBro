@@ -44,13 +44,13 @@ DoYourTasksBro solves this by introducing hard limits on list generation. Design
 ## In-Project Screenshots
 
 ### Todo-List Interface
-![Todo-List Interface Placeholder](test screenshots/Screenshot (194).png)
+![Todo-List Interface](<test screenshots/Screenshot (194).png>)
 
 ### Weekly Routine Allocation Canvas
-![Weekly Timetable Matrix Interface Placeholder](test screenshots/Screenshot (196).png)
+![Weekly Timetable Matrix Interface](<test screenshots/Screenshot (196).png>)
 
 ### Monthly Load Distribution Grid
-![Monthly Calendar Interface Placeholder](test screenshots/Screenshot (197).png)
+![Monthly Load Distribution Grid](<test screenshots/Screenshot (197).png>)
 
 ---
 
