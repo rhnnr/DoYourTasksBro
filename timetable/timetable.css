@@ -172,13 +172,6 @@
     align-items: center;
 }
 
-#control-panel h1
-{
-    font-size: 3rem;
-    font-weight: 900;
-    letter-spacing: -0.05em;
-    margin-bottom: 10px;
-}
 
 #control-panel p
 {
@@ -386,13 +379,6 @@ body.light-mode #schedule-form input[type="time"]::-webkit-calendar-picker-indic
     {
         margin-bottom: 5px;
         flex-shrink: 0;
-    }
-
-    #control-panel h1
-    {
-        font-size: 1.6rem;
-        margin-bottom: 10px;
-        padding-top: 10px;
     }
 
     #control-panel p
