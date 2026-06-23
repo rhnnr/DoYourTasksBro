@@ -24,15 +24,12 @@
     margin-top: 30px;
     overflow-x: auto;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-}
 
-#app-container
-{
-    padding: 0 40px 40px 40px;
+    width: 100% ;
+    max-width: 1500px;
     box-sizing: border-box;
-    min-height: 100vh;
-    max-width: 1600px;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .time-axis
@@ -366,38 +363,37 @@ body.light-mode #schedule-form input[type="time"]::-webkit-calendar-picker-indic
 
 body.light-mode .schedule-block 
 {
-    background: rgba(59, 130, 246, 0.07) !important; 
-    border: 1px solid rgba(59, 130, 246, 0.2) !important;
-    border-left: 4px solid #3b82f6 !important;       
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04) !important; 
+    background: rgba(59, 130, 246, 0.07); 
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-left: 4px solid #3b82f6;       
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04); 
 }
 
 body.light-mode .schedule-block:hover 
 {
-    background: rgba(59, 130, 246, 0.12) !important;
-    box-shadow: 0 6px 18px rgba(59, 130, 246, 0.15) !important;
+    background: rgba(59, 130, 246, 0.12);
+    box-shadow: 0 6px 18px rgba(59, 130, 246, 0.15);
 }
 
 body.light-mode .card-time 
 {
-    color: #2563eb !important; 
+    color: #2563eb; 
     font-weight: 700;
 }
 
 body.light-mode .block-remove-btn 
 {
-    color: #2563eb !important; 
+    color: #2563eb; 
 }
 
 body.light-mode .block-remove-btn:hover 
 {
-    color: #ffffff !important;
-    background-color: #ef4444 !important; 
+    color: #ffffff;
+    background-color: #ef4444; 
 }
 
 @media (max-width: 800px)
 {
-    /* Container adjustments */
     #app-container
     {
         padding: 0 10px 80px 10px;
@@ -405,7 +401,6 @@ body.light-mode .block-remove-btn:hover
         flex-direction: column;
     }
 
-    /* Header compacting */
     #control-panel
     {
         margin-bottom: 5px;
@@ -418,7 +413,6 @@ body.light-mode .block-remove-btn:hover
         margin-bottom: 5px;
     }
 
-    /* Ultra-compact Form */
     #schedule-form
     {
         padding: 12px;
@@ -434,7 +428,6 @@ body.light-mode .block-remove-btn:hover
         width: 100%;
     }
 
-    /* Reorder Form: Label -> Days -> Times -> Button */
     .form-row:first-child
     {
         flex-direction: column;
@@ -442,7 +435,7 @@ body.light-mode .block-remove-btn:hover
 
     .form-row:last-child
     {
-        display: flex !important;
+        display: flex;
         gap: 8px;
         width: 100%;
         flex-wrap: wrap;
@@ -457,7 +450,6 @@ body.light-mode .block-remove-btn:hover
         font-size: 0.95rem;
     }
 
-    /* Micro-Day Selectors */
     #block-day
     {
         width: 100%;
@@ -472,14 +464,13 @@ body.light-mode .block-remove-btn:hover
     {
         padding: 0;
         height: 42px;
-        font-size: 0; /* Hides the full text */
+        font-size: 0; 
         border-radius: 8px;
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
-    /* Inject 1-letter abbreviations into labels */
     #block-day label:nth-child(1)::after { content: 'M'; font-size: 0.95rem; }
     #block-day label:nth-child(2)::after { content: 'T'; font-size: 0.95rem; }
     #block-day label:nth-child(3)::after { content: 'W'; font-size: 0.95rem; }
@@ -508,7 +499,6 @@ body.light-mode .block-remove-btn:hover
         font-size: 0.95rem;
     }
 
-    /* Fit-to-screen Matrix (Zero Horizontal Scroll) */
     #matrix-wrapper
     {
         margin-top: 15px;
@@ -521,7 +511,7 @@ body.light-mode .block-remove-btn:hover
 
     #timetable-matrix
     {
-        min-width: 0; /* Allows the grid to shrink below natural width */
+        min-width: 0; 
         padding: 0;
         gap: 3px;
     }
@@ -574,8 +564,8 @@ body.light-mode .block-remove-btn:hover
     .card-text
     {
         font-size: 0.65rem;
-        white-space: normal; /* Allows text to werap into multiple lines */
-        overflow-wrap: anywhere; /* Forces wrapping on tiny screens */
+        white-space: normal; 
+        overflow-wrap: anywhere;
         line-height: 1.1;
     }
 
@@ -590,7 +580,7 @@ body.light-mode .block-remove-btn:hover
         right: 2px;
         font-size: 0.8rem;
         padding: 2px 4px;
-        background: rgba(0, 0, 0, 0.6); /* Backdrop to make 'X' visible over text */
+        background: rgba(0, 0, 0, 0.6); 
         border-radius: 4px;
     }
 }
