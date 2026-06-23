@@ -14,6 +14,7 @@
             document.body.classList.add('light-mode');
         }
     </script>
+
     <nav id="sidebar" class="close">
         <ul>
             <li>
@@ -59,56 +60,128 @@
             </li>
         </ul>
     </nav>
+
     <main id="app-container" class="bro-landing">
-        <h1>DoSomethingBro</h1>
-        <div class="container">
-            <h2>Less Talking, More Doing</h2>
-            <p>
-                Look, this isn't another bloated corporate planner with ten thousand labels and folders you'll never use. <strong>DoYourTasksBro</strong> is built for one simple thing: actual execution. Stop formatting your lists and start clearing them.
-            </p>
-        </div>
+    
+        <!-- MODULE 1: COMMAND HEADER STRIP -->
+        <header id="dashboard-control-deck">
+            <div class="deck-title-group">
+                <h1 class="home-title">DoSomethingBro</h1>
+                <span class="system-ping">CORE FLIGHT READY</span>
+            </div>
+            <div class="quick-matrix-links">
+                <a href="../root/pages/todo.html" class="deck-pill-btn">EXECUTE TASK DECK</a>
+                <a href="../root/pages/timetable.html" class="deck-pill-btn">VIEW MATRIX TIME</a>
+            </div>
+        </header>
 
-        <div class="container">
-            <h2>How It Works</h2>
-            <p>
-                Here is a quick breakdown of how the different tabs work together to keep your schedule sorted:
-            </p>
-            <ul style="list-style-type: none; padding-left: 0; margin-top: 15px;">
-                <li style="margin-bottom: 15px; border-left: 3px solid var(--selected-bg); padding-left: 12px;">
-                    <strong>📝 Todo-List:</strong> Dump your tasks here and pick a deadline. Once you finish something, hit "Done" to wipe it off your active board and send it straight to your history logs.
-                </li>
-                <li style="margin-bottom: 15px; border-left: 3px solid var(--selected-bg); padding-left: 12px;">
-                    <strong>📊 Time Table:</strong> This is for your fixed weekly routine. Use it to lock in your college class schedule, block lectures, or daily habits so you always know where you need to be.
-                </li>
-                <li style="margin-bottom: 15px; border-left: 3px solid var(--selected-bg); padding-left: 12px;">
-                    <strong>📅 Calendar:</strong> A clean monthly view linked directly to your tasks. Days with pending work will show a red dot so nothing sneaks up on you. Click any day to see exactly what's due.
-                </li>
-                <li style="margin-bottom: 15px; border-left: 3px solid var(--selected-bg); padding-left: 12px;">
-                    <strong>⚙️ Settings:</strong> Tweak the app parameters. You can customize your workload warning limits, permanently clear out your completed history, or switch between light and dark modes.
-                </li>
-            </ul>
-        </div>
+        <!-- MODULE 2: SYSTEM DIRECTIVE BANNER -->
+        <section class="directive-strip">
+            <div class="directive-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m422-232 207-248H469l29-227-185 267h139l-30 208ZM320-80l40-280H160l360-520h80l-40 320h240L400-80h-80Zm151-390Z"/></svg>
+            </div>
+            <div class="directive-body">
+                <h2>LESS TALKING, MORE DOING</h2>
+                <p>Zero corporate noise. Zero bloated folder configurations. <strong>DoYourTasksBro</strong> runs strictly on execution processing. Stop formatting layouts and start clearing task queues.</p>
+            </div>
+        </section>
 
-        <div class="container">
-            <h2>Watch Your Load Score</h2>
-            <p>
-                Every task you carry takes up mental space. To simulate that, the app tracks a "Load Score." If you stack too many tasks or write long paragraphs instead of short actions, the system changes color states to stop you from overcommitting:
-            </p>
-            <ul class="tier-list">
-                <li class="tier-card tier-safe">
-                    <strong>🟢 Safe Zone (Below Threshold):</strong> 
-                    Workload is light and balanced. You're good to go—keep crossing things off.
-                </li>
-                <li class="tier-card tier-warning">
-                    <strong>🟡 Warning Zone (Approaching Limit):</strong> 
-                    Things are piling up. The app background shifts color to let you know you're taking on a bit too much baggage.
-                </li>
-                <li class="tier-card tier-overload">
-                    <strong>🔴 Critical Overload (Limit Exceeded):</strong> 
-                    TOTAL INPUT LOCKOUT. The app literally disables the input fields so you can't add anything else. No more procrastinating by making lists—you have to actually finish and check off your current tasks before you can type another word.
-                </li>
-            </ul>
-        </div>
+        <!-- MODULE 3: SYSTEM OPERATIONAL STATUS BLOCKS -->
+        <h3 class="section-matrix-label">MODULES</h3>
+        <section class="module-status-grid">
+            
+            <div class="status-node">
+                <div class="node-header">
+                    <h4>TODO ENGINE</h4>
+                </div>
+                <p>Captures incoming commitments, stamps targets, and routes completed logs directly down to historical archival tracks.</p>
+                <div class="node-metric">STATUS: ACTIVE</div>
+            </div>
+
+            <div class="status-node">
+                <div class="node-header">
+                    <h4>TIMETABLE MATRIX</h4>
+                </div>
+                <p>Locks in your rigid weekly timeline routines—engineering course columns, lecture windows, and daily base schedules.</p>
+                <div class="node-metric">STATUS: LIVE</div>
+            </div>
+
+            <div class="status-node">
+                <div class="node-header">
+                    <h4>CALENDAR PROJECTION</h4>
+                </div>
+                <p>Generates active monthly radar screens. Analyzes day densities and automatically fires tracking highlights.</p>
+                <div class="node-metric">STATUS: ONLINE</div>
+            </div>
+
+            <div class="status-node">
+                <div class="node-header">
+                    <h4>SYSTEM RUNTIMES</h4>
+                </div>
+                <p>Handles interface configurations, light/dark theme values, variables caching, and full data wiping overrides.</p>
+                <div class="node-metric">STATUS: VERIFIED</div>
+            </div>
+
+        </section>
+
+        <!-- MODULE 4: SPLIT CRITICAL THRESHOLDS & LEDGER SYSTEMS -->
+        <section class="ledger-split-row">
+            
+            <!-- THRESHOLD CARD PANEL -->
+            <div class="panel-box threshold-tracker">
+                <h3>LOAD CONSTRAINTS</h3>
+                <p>Every active item weights the system pipeline. Exceeding density safety margins changes color states and invokes absolute input blockades.</p>
+                
+                <div class="metric-line safe">
+                    <div class="status-glow-dot green"></div>
+                    <div class="metric-desc"><strong>SAFE RANGE:</strong> Processing clear. System parameters running under margin rules.</div>
+                </div>
+                
+                <div class="metric-line warning">
+                    <div class="status-glow-dot yellow"></div>
+                    <div class="metric-desc"><strong>WARN STATE:</strong> Queue bottleneck observed. Dashboard theme boundaries modifying.</div>
+                </div>
+                
+                <div class="metric-line overload">
+                    <div class="status-glow-dot red"></div>
+                    <div class="metric-desc"><strong>LOCKOUT ACTIVE:</strong> Critical load thresholds breached. INPUT SYSTEM SHUT DOWN. Clear queues to recover text lines.</div>
+                </div>
+            </div>
+
+            <!-- STABILIZED SCROLLABLE UPDATE LOG CARD -->
+            <div class="panel-box system-changelog">
+                <h3>UPDATE LOGS</h3>
+                <div class="ledger-stream">
+
+                    <div class="ledger-block patch">
+                        <div class="ledger-meta">
+                            <span class="tag">v1.1.0</span>
+                            <span class="timestamp">Jun 24, 2026</span>
+                        </div>
+                        <p>Transformed home module into a fully integrated assymetrical dashboard.</p>
+                    </div>
+                    
+                    <div class="ledger-block stable">
+                        <div class="ledger-meta">
+                            <span class="tag patch">v1.0.1</span>
+                            <span class="timestamp">Jun 23, 2026</span>
+                        </div>
+                        <p>Optimized the core layout system. Swapped disruptive display engines for smooth alpha animations across sidebars. Corrected horizontal padding overflow bugs on timetable matrices.</p>
+                    </div>
+
+                    <div class="ledger-block patch">
+                        <div class="ledger-meta">
+                            <span class="tag patch">v1.0.0</span>
+                            <span class="timestamp">Jun 22, 2026</span>
+                        </div>
+                        <p>Initial system deployment. Stabilized light/dark theme tracking variables using local storage caches. Created layout structures for core task frameworks and timeline components.</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
     </main>
 </body>
 </html>

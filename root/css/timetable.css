@@ -26,7 +26,7 @@
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
 
     width: 100% ;
-    max-width: 1500px;
+    max-width: 1600px;
     box-sizing: border-box;
     margin-left: auto;
     margin-right: auto;
@@ -190,7 +190,7 @@
     border-radius: 16px;
     margin-top: 30px;
     width: 100%;
-    max-width: 900px;
+    max-width: 1600px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
