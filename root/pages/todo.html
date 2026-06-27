@@ -62,27 +62,32 @@
     <main id="app-container" class="bro-landing">
         
         <header id="control-panel">
-            <h1>DoYourTasksBro</h1>
+            <div id="deck-title-group">
+                <h1>DoYourTasksBro</h1>
+                <span class="system-ping">PURPOSE CREATION ADVENTURE</span>
+            </div>
+        
             <div class="view-tabs">
                 <button id="tab-todo" class="tab-btn active">Active Tasks</button>
-                <button id="tab-history" class="tab-btn">Destroyed Pasts</button>
+                <button id="tab-history" class="tab-btn">Finished Tasks</button>
             </div>
         </header>
 
         <section id="todo-view">
             
             <div id="load-status">
-                Load score: <span id="score-number">0</span>
+                <span id="score-number">0</span>
             </div>
             
             <form id="task-form">
                 <div class="input-wrapper">
                     <input type="text" id="task-input" placeholder="Type a commitment, Bro..."/>
-                    <div id="counter-wrapper"><span id="live-weight-counter">0</span> pts</div>
+                    <div id="counter-wrapper"><span id="live-weight-counter">0</span> pt</div>
                 </div>
                 <input type="date" id="task-deadline"/>
                 <button type="submit" id="task-add">Add Task</button>
             </form>
+        </section>
 
             <div id="gravity-board"></div> 
         </section>

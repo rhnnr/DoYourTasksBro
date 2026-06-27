@@ -117,6 +117,15 @@ body.light-mode #ending-msg:hover
     text-shadow: 2px -1px 0 rgba(239, 68, 68, 0.5), -2px 1px 0 rgba(59, 130, 246, 0.5) !important;
 }
 
+p
+{
+    margin-top: 8px;
+    margin-bottom: 20px;
+    color: var(--text-second);
+    line-height: 1.8;
+}
+
+
 @media (max-width: 800px) {
     .bro-landing .container {
         width: 100%;

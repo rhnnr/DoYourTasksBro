@@ -61,6 +61,30 @@ body
     transition: background-color 0.4s ease, color 0.4s ease;
 }
 
+#app-container {
+    display: flex;
+    flex-direction: column;
+    
+    width: calc(100% - 72px);
+    max-width: 1700px;
+    margin-left: auto;
+    margin-right: auto;
+    transform: translateX(36px) !important;
+
+    gap: 1.5vh;
+    padding-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.system-ping {
+    font-family: monospace;
+    font-size: 0.7rem;
+    font-weight: 900;
+    color: var(--selected-bg);
+    letter-spacing: 0.2em;
+    margin-top: 2px;
+}
+
 body.light-mode
 {
     --main-bg: #f8fafc;
@@ -257,14 +281,6 @@ main
     box-sizing: border-box;
 }
 
-main p
-{
-    margin-top: 8px;
-    margin-bottom: 20px;
-    color: var(--text-second);
-    line-height: 1.8;
-}
-
 @keyframes velocityEntrance
 {
     0%
@@ -319,106 +335,178 @@ main p
     body
     {
         display: block; 
-        padding: 15px;
+        padding: 16px 16px 90px 16px;
         overflow-x: hidden;
+        background-position: center top;
     }
 
-    h1
+    #app-container
     {
-        font-size: 2.2rem;
-        margin-top: 15px;
-        margin-bottom: 25px;
-        padding-top: 0;
-        background: linear-gradient(to right, #ffffff, #94a3b8);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        display: block;
+        width: 100%;
+        max-width: 100%;
+        transform: none !important;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+        gap: 16px;
     }
 
     main
     {
         margin-left: 0;
-        padding-bottom: 100px;
+        padding-bottom: 0;
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
     }
 
+    h1
+    {
+        font-size: 2.2rem !important;
+        margin-top: 10px !important;
+        margin-bottom: 20px !important;
+        padding-top: 0 !important;
+        background: linear-gradient(to right, #ffffff, #94a3b8) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        display: block !important;
+        text-align: center !important;
+    }
+
+    .system-ping
+    {
+        text-align: center !important;
+    }
+
     .container
     {
-        border: 1px solid var(--sidebar-border);
-        padding: 24px;
-        width: 100%;
-        box-sizing: border-box;
+        border: 1px solid var(--sidebar-border) !important;
+        padding: 20px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 16px !important;
     }
 
     .container h2
     {
-        font-size: 1.5rem;
+        font-size: 1.4rem !important;
     }
 
     .container p
     {
-        font-size: 0.9rem;
+        font-size: 0.9rem !important;
     }
 
     #sidebar,
     #sidebar.close
     {
-        height: 70px;
-        width: 100%;
-        border-right: none;
-        border-top: 1px solid var(--sidebar-border);
-        padding: 0;
-        position: fixed;
-        top: auto;
-        bottom: 0;
-        left: 0;
-        background-color: rgba(10, 10, 10, 0.95);
-        backdrop-filter: blur(10px);
-        z-index: 1000;
-        transition: none; /* Disables animations on mobile row */
+        height: 64px !important;
+        width: 100% !important;
+        border-right: none !important;
+        border-top: 1px solid var(--sidebar-border) !important;
+        padding: 0 !important;
+        position: fixed !important;
+        top: auto !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        background-color: rgba(10, 10, 10, 0.92) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        z-index: 1000 !important;
+        transition: none !important;
     }
     
     #sidebar > ul
     {
-        padding: 0;
-        margin: 0;
-        display: flex;
-        width: 100%;
-        height: 100%;
-        justify-content: space-around;
-        align-items: center;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        width: 100% !important;
+        height: 100% !important;
+        justify-content: space-around !important;
+        align-items: center !important;
     }
 
     #sidebar ul li
     {
-        height: 100%;
-        flex: 1;
+        height: 100% !important;
+        flex: 1 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
 
     #sidebar ul a
     {
-        width: 100%;
-        height: 100%;
-        padding: 0;
-        border-radius: 0;
-        border: none;
-        justify-content: center;
-        align-items: center;
-        gap: 0;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        border: none !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 0 !important;
+        min-height: auto !important;
     }
 
     #sidebar ul li span,
-    #sidebar.close a span
+    #sidebar.close a span,
+    #sidebar.close .logo,
+    #sidebar .logo
     {
         display: none !important;
     }
     
     #sidebar > ul > li:first-child
     {
-        display: none;
+        display: none !important;
     }
 
+    #control-panel,
+    #dashboard-control-deck {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    .deck-title-group {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        width: 100% !important;
+    }
+
+    #control-panel h1,
+    #dashboard-control-deck h1,
+    .home-title, h1 {
+        text-align: center !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    .system-ping {
+        display: block !important;
+        text-align: center !important;
+        margin: 6px auto 0 auto !important;
+        width: 100% !important;
+    }
+
+    .view-tabs,
+    .quick-matrix-links,
+    #tab-history.tab-btn {
+        display: flex !important;
+        justify-content: center !important;
+        width: 100% !important;
+        max-width: 440px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        gap: 8px !important;
+    }
 }

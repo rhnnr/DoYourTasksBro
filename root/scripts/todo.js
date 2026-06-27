@@ -203,18 +203,22 @@ function renderHistory() {
 
 tabTodo.addEventListener('click', () => {
     todoView.classList.remove('hidden');
+    gravityBoard.classList.remove('hidden');
     historyView.classList.add('hidden');
 
     tabTodo.classList.add('active');
+    gravityBoard.classList.add('active');
     tabHistory.classList.remove('active');
 });
 
 tabHistory.addEventListener('click', () => {
     historyView.classList.remove('hidden');
     todoView.classList.add('hidden');
+    gravityBoard.classList.add('hidden');
 
     tabHistory.classList.add('active');
     tabTodo.classList.remove('active');
+    gravityBoard.classList.remove('active');
 });
 
 // --- Global Theme Toggle ---
