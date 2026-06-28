@@ -205,100 +205,87 @@ function renderCalendarGrid(displayDate, taskList, eventList) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+function initializeCalendarLifecycle() {
     let currentViewDate = new Date();
     
     savedTasks = JSON.parse(localStorage.getItem("doyourtasksbro_data")) || [];
     calendarEvents = JSON.parse(localStorage.getItem("doyourtasksbro_events")) || [];
     renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
 
-    if (window.LiveSync) {
-        const cloudTasks = await LiveSync.pullData('tasks_data');
-        const cloudEvents = await LiveSync.pullData('calendar_data');
+    if (typeof LiveSync !== 'undefined') {
+        console.log("[LIVESYNC CONNECTION] Hooking up global Postgres tables...");
         
-        if (cloudTasks !== null) savedTasks = cloudTasks;
-        if (cloudEvents !== null) calendarEvents = cloudEvents;
-        
-        renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
+        LiveSync.pullData('tasks_data').then(cloudTasks => {
+            if (cloudTasks !== null) {
+                savedTasks = cloudTasks;
+                renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
+            }
+        });
+
+        LiveSync.pullData('calendar_data').then(cloudEvents => {
+            if (cloudEvents !== null) {
+                calendarEvents = cloudEvents;
+                renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
+            }
+        });
 
         LiveSync.connectRealtimeMatrix('tasks_data', (incomingPayload) => {
             savedTasks = incomingPayload;
             renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
+            localStorage.setItem('doyourtasksbro_data', JSON.stringify(savedTasks));
         });
 
         LiveSync.connectRealtimeMatrix('calendar_data', (incomingPayload) => {
             calendarEvents = incomingPayload;
             renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
+            localStorage.setItem('doyourtasksbro_events', JSON.stringify(calendarEvents));
         });
-    }
-
-    const sidebarToggle = document.getElementById('sidebar-toggle-btn');
-    if (sidebarToggle && window.toggleSidebar) {
-        sidebarToggle.addEventListener('click', window.toggleSidebar);
+    } else {
+        console.warn("[RETRY] LiveSync object not instantiated yet. Retrying bridge... ");
     }
 
     const prevBtn = document.getElementById("prev-month-btn");
     const nextBtn = document.getElementById("next-month-btn");
-    if (prevBtn) prevBtn.addEventListener("click", () => { currentViewDate.setMonth(currentViewDate.getMonth() - 1); renderCalendarGrid(currentViewDate, savedTasks, calendarEvents); });
-    if (nextBtn) nextBtn.addEventListener("click", () => { currentViewDate.setMonth(currentViewDate.getMonth() + 1); renderCalendarGrid(currentViewDate, savedTasks, calendarEvents); });
+    if (prevBtn) prevBtn.onclick = () => { currentViewDate.setMonth(currentViewDate.getMonth() - 1); renderCalendarGrid(currentViewDate, savedTasks, calendarEvents); };
+    if (nextBtn) nextBtn.onclick = () => { currentViewDate.setMonth(currentViewDate.getMonth() + 1); renderCalendarGrid(currentViewDate, savedTasks, calendarEvents); };
 
-    const openModalBtn = document.getElementById('open-modal-btn');
-    const eventModal = document.getElementById('event-modal');
-    const selectTags = document.querySelector('#saved-tags');
-    const cancelBtn = document.querySelector('.btn-cancel');
     const saveBtn = document.querySelector('.btn-save');
-    const eventTitle = document.querySelector('.event-title');
-    const eventDate = document.querySelector('.event-date');
+    if (saveBtn) {
+        saveBtn.onclick = async (event) => {
+            event.preventDefault();
+            const selectTags = document.querySelector('#saved-tags');
+            const eventTitle = document.querySelector('.event-title');
+            const eventDate = document.querySelector('.event-date');
+            const customTagName = document.querySelector('.custom-tag-name');
+            const customTagColor = document.querySelector('.custom-tag-color');
+            const eventModal = document.getElementById('event-modal');
 
-    function fetchTagCollection() {
-        const storedTags = JSON.parse(localStorage.getItem("doyourtasksbro_tags"));
-        return storedTags || [{ id: "tag-1", name: "Exam", color: "#FF9800" }, { id: "tag-2", name: "Birthday", color: "#E91E63"}];
+            let finalTagName = selectTags ? selectTags.value : "General";
+
+            if (selectTags && selectTags.value === 'new' && customTagName) {
+                finalTagName = customTagName.value;
+                const storedTags = JSON.parse(localStorage.getItem("doyourtasksbro_tags")) || [];
+                storedTags.push({ name: customTagName.value, color: customTagColor.value });
+                localStorage.setItem('doyourtasksbro_tags', JSON.stringify(storedTags));
+            }
+
+            calendarEvents.push({ text: eventTitle.value, deadline: eventDate.value, tag: finalTagName });
+            localStorage.setItem('doyourtasksbro_events', JSON.stringify(calendarEvents));
+            
+            if (typeof LiveSync !== 'undefined') await LiveSync.pushData('calendar_data', calendarEvents);
+
+            if (eventModal) eventModal.classList.add('hidden');
+            if (eventTitle) eventTitle.value = '';
+            if (customTagName) customTagName.value = '';
+            renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
+        };
     }
+}
 
-    function dropDownMenu() {
-        if (!selectTags) return;
-        const tagsList = fetchTagCollection();
-        selectTags.innerHTML = "";
-        tagsList.forEach((tag) => {
-            const option = document.createElement('option');
-            option.text = tag.name; option.value = tag.name;
-            selectTags.appendChild(option);
-        });
-        const newTagOption = document.createElement('option');
-        newTagOption.value = 'new'; newTagOption.text = '+ Create New Tag';
-        selectTags.appendChild(newTagOption);
-    }
-    dropDownMenu();
-
-    if (selectTags) selectTags.addEventListener('change', () => {
-        const tagInputs = document.querySelector('.custom-tag-inputs');
-        if (tagInputs) selectTags.value === 'new' ? tagInputs.classList.remove('hidden') : tagInputs.classList.add('hidden');
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(initializeCalendarLifecycle, 50);
     });
-
-    if (openModalBtn) openModalBtn.addEventListener('click', () => eventModal?.classList.remove('hidden'));
-    if (cancelBtn) cancelBtn.addEventListener('click', () => eventModal?.classList.add('hidden'));
-    
-    if (saveBtn) saveBtn.addEventListener('click', async (event) => {
-        event.preventDefault();
-        let finalTagName = selectTags.value;
-        const customTagName = document.querySelector('.custom-tag-name');
-        const customTagColor = document.querySelector('.custom-tag-color');
-
-        if (selectTags.value === 'new' && customTagName) {
-            finalTagName = customTagName.value;
-            const currentTags = fetchTagCollection();
-            currentTags.push({ name: customTagName.value, color: customTagColor.value });
-            localStorage.setItem('doyourtasksbro_tags', JSON.stringify(currentTags));
-            dropDownMenu();
-        }
-
-        calendarEvents.push({ text: eventTitle.value, deadline: eventDate.value, tag: finalTagName });
-        localStorage.setItem('doyourtasksbro_events', JSON.stringify(calendarEvents));
-        if (window.LiveSync) await LiveSync.pushData('calendar_data', calendarEvents);
-
-        if (eventModal) eventModal.classList.add('hidden');
-        if (eventTitle) eventTitle.value = '';
-        if (customTagName) customTagName.value = '';
-        renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
-    });
-});
+} else {
+    setTimeout(initializeCalendarLifecycle, 50);
+}
