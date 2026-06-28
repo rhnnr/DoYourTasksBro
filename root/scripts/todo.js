@@ -44,7 +44,8 @@ if (savedHistory !== null) {
 }
 
 if (savedData !== null) {
-    taskList = JSON.parse(savedData);
+    const allStoredItems = JSON.parse(savedData);
+    taskList = allStoredItems.filter(item => item.weight !== undefined);
 } else {
     taskList = [];
 }
@@ -187,6 +188,14 @@ function updateGlobalMetrics() {
 function saveData() {
     const stringifiedVar = JSON.stringify(taskList);
     localStorage.setItem('doyourtasksbro_data', stringifiedVar);
+
+    const rawStorage = localStorage.getItem('doyourtasksbro_data');
+    const allStoredItems = rawStorage ? JSON.parse(rawStorage) : [];
+
+    const calendarEventsOnly = allStoredItems.filter(item => item.tag !== undefined);
+    const combinedDataCollection = [...calendarEventsOnly, ...taskList];
+
+    localStorage.setItem('doyourtasksbro_data', JSON.stringify(combinedDataCollection));
 }
 
 function renderHistory() {

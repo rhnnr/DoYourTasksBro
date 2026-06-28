@@ -38,6 +38,18 @@ function evaluateDayLoad(taskList, targetDate) {
     return { matchedTasks, threatTier };
 }
 
+// to fetch the color of the event in the calendar
+function getTagColor(tagName) {
+    const storedTags = JSON.parse(localStorage.getItem("doyourtasksbro_tags"));
+    const tagList = storedTags || [
+        { id: "tag-1", name: "Exam", color: "#FF9800"},
+        { id: "tag-2", name: "Birthday", color: "#E91E63"}
+    ];
+
+    const matchTag = tagList.find(tag => tag.name === tagName);
+    return matchTag ? matchTag.color: "#3B82F6";
+}
+
 function renderCalendarGrid(displayDate, taskList) {
     const year = displayDate.getFullYear();
     const month = displayDate.getMonth();
@@ -48,6 +60,7 @@ function renderCalendarGrid(displayDate, taskList) {
     ];
 
     document.getElementById('month-year-display').textContent = `${months[month]} ${year}`;
+    document.getElementById('mini-month-year-display').textContent = `${months[month]} ${year}`;
 
     const calendarGrid = document.getElementById('calendar-grid');
     calendarGrid.innerHTML = '';
@@ -55,6 +68,67 @@ function renderCalendarGrid(displayDate, taskList) {
     const { firstDayIndex, totalDays } = getMonthMetadata(year, month);
     const realTimeToday = new Date();
 
+    const totalSlotsNeeded = firstDayIndex + totalDays;
+    const rowCount = Math.ceil(totalSlotsNeeded / 7);
+    calendarGrid.style.gridTemplateRows = `repeat(${rowCount}, 1fr)`;
+
+    function updateBriefingDeck(targetDateString) {
+        const updatedItems = taskList.filter(item => item.deadline === targetDateString);
+        const deck = document.getElementById('filtered-task-deck');
+        deck.innerHTML = '';
+
+        if (updatedItems.length === 0) {
+            deck.innerHTML = `<div class="task-deck-placeholder">No items scheduled for this day.</div>`;
+        } else {
+            updatedItems.forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'briefing-item-card';
+                
+                const isTask = item.weight !== undefined;
+                const badgeText = isTask ? `LOAD: ${item.weight}` : `TAG: ${item.tag}`;
+                
+                itemCard.innerHTML = `
+                    <div class="briefing-card-main-info">
+                        <span class="briefing-card-text">${item.text || "Untitled"}</span>
+                        <span class="briefing-card-badge">${badgeText}</span>
+                    </div>
+                `;
+
+                if (!isTask) {
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'event-delete-btn';
+                    deleteBtn.innerHTML = '&times;';
+                    deleteBtn.title = 'Delete Event';
+                    
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        
+                        const masterIndex = taskList.findIndex(t => t.text === item.text && t.deadline === item.deadline && t.tag === item.tag);
+                        
+                        if (masterIndex !== -1) {
+                            taskList.splice(masterIndex, 1);
+                            localStorage.setItem('doyourtasksbro_data', JSON.stringify(taskList));
+                            
+                            renderCalendarGrid(displayDate, taskList);
+                            updateBriefingDeck(targetDateString);
+                            
+                            document.querySelectorAll('.calendar-day').forEach(cell => {
+                                const numLabel = cell.querySelector('.day-number');
+                                if (numLabel && formatSystemDate(year, month, parseInt(numLabel.textContent)) === targetDateString) {
+                                    cell.classList.add('selected');
+                                }
+                            });
+                        }
+                    });
+                    
+                    itemCard.appendChild(deleteBtn);
+                }
+                deck.appendChild(itemCard);
+            });
+        }
+    }
+
+    // MAIN CALENDAR GRID RENDER ENGINE
     for (let i = 0; i < firstDayIndex; i++) {
         const emptyCell = document.createElement('div');
         emptyCell.classList.add('calendar-day', 'empty');
@@ -63,7 +137,12 @@ function renderCalendarGrid(displayDate, taskList) {
 
     for (let day = 1; day <= totalDays; day++) {
         const dateString = formatSystemDate(year, month, day);
-        const { matchedTasks, threatTier } = evaluateDayLoad(taskList, dateString);
+
+        const dayItems = taskList.filter(item => item.deadline === dateString);
+        const dailyTasks = dayItems.filter(item => item.weight !== undefined);
+        const dailyEvents = dayItems.filter(item => item.tag !== undefined);
+
+        const { threatTier } = evaluateDayLoad(dailyTasks, dateString);
 
         const dayCell = document.createElement('div');
         dayCell.classList.add('calendar-day');
@@ -76,24 +155,71 @@ function renderCalendarGrid(displayDate, taskList) {
             dayCell.classList.add('today');
         }
 
+        const headerRow = document.createElement('div');
+        headerRow.classList.add('day-header-row');
+
         const dayNumLabel = document.createElement('span');
         dayNumLabel.classList.add('day-number');
         dayNumLabel.textContent = day;
+        headerRow.appendChild(dayNumLabel);
 
-        dayCell.appendChild(dayNumLabel);
-
-        if (matchedTasks.length > 0) {
+        // Render workload dot
+        if (dailyTasks.length > 0) {
             const dotContainer = document.createElement('div');
             dotContainer.classList.add('dot-container');
 
             const dot = document.createElement('span');
-            dot.classList.add('indicator-dot');
-            dot.classList.add(`dot-${threatTier}`);
+            dot.classList.add('indicator-dot', `dot-${threatTier}`);
 
             dotContainer.appendChild(dot);
-            dayCell.appendChild(dotContainer);
+            headerRow.appendChild(dotContainer);
         }
 
+        dayCell.appendChild(headerRow);
+        
+        // Render event ribbon
+        if (dailyEvents.length > 0) {
+            if (dailyEvents.length <= 2) {
+                dailyEvents.forEach(eventItem => {
+                    const eventColor = getTagColor(eventItem.tag);
+                    const ribbonElement = document.createElement('div');
+
+                    ribbonElement.classList.add('event-ribbon');
+                    ribbonElement.textContent = eventItem.text;
+                    ribbonElement.style.backgroundColor = eventColor;
+                    
+                    dayCell.appendChild(ribbonElement);
+                });
+            } else {
+                const chipContainer = document.createElement('div');
+                chipContainer.classList.add('event-chip-container');
+
+                const maxVisibleChips = 4;
+                const visibleEvents = dailyEvents.slice(0, maxVisibleChips);
+
+                visibleEvents.forEach(eventItem => {
+                    const eventColor = getTagColor(eventItem.tag);
+                    const chipElement = document.createElement('div');
+                    
+                    chipElement.classList.add('event-color-chip');
+                    chipElement.style.backgroundColor = eventColor;
+                    chipElement.title = eventItem.text; 
+                    
+                    chipContainer.appendChild(chipElement);
+                });
+
+                dayCell.appendChild(chipContainer);
+
+                if (dailyEvents.length > maxVisibleChips) {
+                    const overflowLabel = document.createElement('span');
+                    overflowLabel.classList.add('event-overflow-counter');
+                    overflowLabel.textContent = '...';
+                    dayCell.appendChild(overflowLabel);
+                }
+            }
+        }
+
+        // Click Event listener
         dayCell.addEventListener('click', () => {
             document.querySelectorAll('.calendar-day.selected').forEach(el => {
                 el.classList.remove('selected');
@@ -102,35 +228,70 @@ function renderCalendarGrid(displayDate, taskList) {
             dayCell.classList.add('selected');
             document.getElementById('selected-date-label').textContent = dateString;
 
-            const deck = document.getElementById('filtered-task-deck');
-            deck.innerHTML = '';
-
-            if (matchedTasks.length === 0) {
-                deck.innerHTML = `<div class="task-deck-placeholder">No tasks scheduled for this day.</div>`;
-            } else {
-                matchedTasks.forEach(task => {
-                    deck.innerHTML += `
-                        <div style="background: var(--card-bg); margin-bottom: 8px; padding: 12px; border-radius: 6px; border: 1px solid var(--sidebar-border); border-left: 4px solid var(--selected-bg); display: flex; justify-content: space-between; align-items: center; gap: 16px;">
-                            <span style="color: var(--text-main); font-weight: 500; text-align: left; word-break: break-word;">${task.text || "Untitled Task"}</span>
-                            <span style="color: var(--text-second); font-family: monospace; font-size: 0.85rem; padding: 4px 8px; background: var(--hover-clr); border: 1px solid var(--sidebar-border); border-radius: 4px; flex-shrink: 0; white-space: nowrap;">LOAD: ${task.weight || 0}</span>
-                        </div>`;
-                });
-            }
+            updateBriefingDeck(dateString);
         });
         
         calendarGrid.appendChild(dayCell);
+    }
+
+    // MINI SIDEBAR CALENDAR RENDER ENGINE
+    const miniCalendarGrid = document.getElementById('mini-calendar-grid');
+    miniCalendarGrid.innerHTML = '';
+
+    for (let i = 0; i < firstDayIndex; i++) {
+        const miniEmptyCell = document.createElement('div');
+        miniEmptyCell.classList.add('mini-day', 'empty');
+        miniCalendarGrid.appendChild(miniEmptyCell);
+    }
+
+    for (let day = 1; day <= totalDays; day++) {
+        const dateString = formatSystemDate(year, month, day);
+        const dayItems = taskList.filter(item => item.deadline === dateString);
+        const dailyEvents = dayItems.filter(item => item.tag !== undefined);
+
+        const miniDayCell = document.createElement('div');
+        miniDayCell.classList.add('mini-day');
+        miniDayCell.textContent = day;
+
+        if (dailyEvents.length > 0) {
+            const miniDot = document.createElement('span');
+            miniDot.classList.add('indicator-dot');
+
+            const dotColor = getTagColor(dailyEvents[0].tag);
+            miniDot.style.backgroundColor = dotColor;
+            miniDot.style.boxShadow = `0 0 6px ${dotColor}`;
+
+            miniDayCell.appendChild(miniDot);
+        }
+
+        if (
+            day === realTimeToday.getDate() &&
+            month === realTimeToday.getMonth() &&
+            year === realTimeToday.getFullYear()
+        ) {
+            miniDayCell.style.border = '1px solid var(--selected-bg)';
+            miniDayCell.style.color = 'var(--selected-bg)';
+            miniDayCell.style.fontWeight = '700';
+        }
+        miniCalendarGrid.appendChild(miniDayCell);
     }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     let currentViewDate = new Date();
-
     const savedTasks = JSON.parse(localStorage.getItem("doyourtasksbro_data")) || [];
 
     renderCalendarGrid(currentViewDate, savedTasks);
 
     const prevBtn = document.getElementById("prev-month-btn");
     const nextBtn = document.getElementById("next-month-btn");
+
+    const miniButtons = document.querySelectorAll('.mini-calendar-nav-controls .mini-nav-btn');
+
+    if (miniButtons.length >= 2) {
+        miniButtons[0].addEventListener("click", () => prevBtn.click());
+        miniButtons[1].addEventListener("click", () => nextBtn.click());
+    }
 
     prevBtn.addEventListener("click", () => {
         currentViewDate.setMonth(currentViewDate.getMonth() - 1);
@@ -139,6 +300,107 @@ document.addEventListener("DOMContentLoaded", () => {
 
     nextBtn.addEventListener("click", () => {
         currentViewDate.setMonth(currentViewDate.getMonth() + 1);
+        renderCalendarGrid(currentViewDate, savedTasks);
+    });
+
+    const openModalBtn = document.getElementById('open-modal-btn');
+    const eventModal = document.getElementById('event-modal');
+    const selectTags = document.querySelector('#saved-tags');
+    const cancelBtn = document.querySelector('.btn-cancel');
+    const saveBtn = document.querySelector('.btn-save');
+    const eventTitle = document.querySelector('.event-title');
+    const eventDate = document.querySelector('.event-date');
+
+    function fetchTagCollection() {
+        const storedTags = JSON.parse(localStorage.getItem("doyourtasksbro_tags"));
+
+        if (storedTags === null) {
+            const defaultTags = [
+                { id: "tag-1", name: "Exam", color: "#FF9800" },
+                { id: "tag-2", name: "Birthday", color: "#E91E63"}
+            ];
+
+            localStorage.setItem("doyourtasksbro_tags", JSON.stringify(defaultTags));
+            return defaultTags;
+        }
+        return storedTags;
+    }
+
+    function dropDownMenu() {
+        const tagsList = fetchTagCollection();
+        selectTags.innerHTML = "";
+
+        tagsList.forEach((tag) => {
+            const option = document.createElement('option');
+            option.text = tag.name;
+            option.value = tag.name;
+
+            selectTags.appendChild(option);
+        });
+
+        const newTagOption = document.createElement('option');
+        newTagOption.value = 'new';
+        newTagOption.text = '+ Create New Tag';
+        
+        selectTags.appendChild(newTagOption);
+    }
+    dropDownMenu();
+
+    selectTags.addEventListener('change', () => {
+        const tagValues = selectTags.value;
+        const tagInputs = document.querySelector('.custom-tag-inputs');
+
+        if (tagValues === 'new') {
+            tagInputs.classList.remove('hidden');
+        } else {
+            tagInputs.classList.add('hidden');
+        }
+    });
+
+    openModalBtn.addEventListener('click', () => {
+        eventModal.classList.remove('hidden');
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        eventModal.classList.add('hidden');
+    });
+    
+    saveBtn.addEventListener('click', (event) => {
+        event.preventDefault();
+        let finalTagName = "";
+        const customTagName = document.querySelector('.custom-tag-name');
+        const customTagColor = document.querySelector('.custom-tag-color');
+        const tagValues = selectTags.value;
+
+        if (tagValues === 'new') {
+            finalTagName = customTagName.value;
+
+            const newTag = {
+                name: customTagName.value,
+                color: customTagColor.value
+            };
+
+            const currentTags = fetchTagCollection();
+            currentTags.push(newTag);
+
+            localStorage.setItem('doyourtasksbro_tags', JSON.stringify(currentTags));
+            dropDownMenu();
+        } else {
+            finalTagName = selectTags.value;
+        }
+
+        const newEventObj = {
+            text: eventTitle.value,
+            deadline: eventDate.value,
+            tag: finalTagName
+        }
+        savedTasks.push(newEventObj);
+        localStorage.setItem('doyourtasksbro_data', JSON.stringify(savedTasks));
+
+        eventModal.classList.add('hidden');
+        eventTitle.value = '';
+        customTagName.value = '';
+
         renderCalendarGrid(currentViewDate, savedTasks);
     });
 });

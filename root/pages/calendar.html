@@ -61,39 +61,95 @@
         </ul>
     </nav>
     <main class="bro-landing" id="app-container">
-        <h1>DoCalendarBro</h1>
-        <div class="calendar-interface-card">
-            <div class="calendar-header">
-                <h2 id="month-year-display">TEST...</h2>
-                <div class="calendar-nav-controls">
-                    <button id="prev-month-btn" class="nav-btn">
-                        &lt;
-                    </button>
-                    <button id="next-month-btn" class="nav-btn">
-                        &gt;
-                    </button>
+        <header>
+        </header>
+        <div class="dashboard-grid-wrapper">
+
+            <div class="main-calendar-column">
+                <div class="calendar-interface-card">
+                    <div class="calendar-header">
+                        <div class="calendar-title-group">
+                            <h2 id="month-year-display">TEST...</h2>
+                            <button id="open-modal-btn" class="action-btn">
+                                <span class="btn-icon">+</span> Add Event
+                            </button>                        
+                        </div>
+
+                        <div class="calendar-nav-controls">
+                            <button id="prev-month-btn" class="nav-btn">
+                                &lt;
+                            </button>
+                            <button id="next-month-btn" class="nav-btn">
+                                &gt;
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="weekday-header">
+                        <div>SUN</div>
+                        <div>MON</div>
+                        <div>TUE</div>
+                        <div>WED</div>
+                        <div>THU</div>
+                        <div>FRI</div>
+                        <div>SAT</div>
+                    </div>
+
+                    <div id="calendar-grid"></div>
                 </div>
             </div>
 
-            <div class="weekday-header">
-                <div>SUN</div>
-                <div>MON</div>
-                <div>TUE</div>
-                <div>WED</div>
-                <div>THU</div>
-                <div>FRI</div>
-                <div>SAT</div>
-            </div>
+            <div class="side-panel-column">
+                <div class="mini-calendar-card">
+                    <div class="mini-calendar-header">
+                        <h3 id="mini-month-year-display">TEST...</h3>
+                        <div class="mini-calendar-nav-controls">
+                            <button class="mini-nav-btn">
+                                &lt;
+                            </button>
+                            <button class="mini-nav-btn">
+                                &gt;
+                            </button>
+                        </div>
+                    </div>
 
-            <div id="calendar-grid"></div>
-        </div>
+                    <div class="mini-weekday-header">
+                        <div>S</div>
+                        <div>M</div>
+                        <div>T</div>
+                        <div>W</div>
+                        <div>T</div>
+                        <div>F</div>
+                        <div>S</div>
+                    </div>
 
-        <div class="container active-day-briefing">
-            <h2 class="briefing-title"><span id="selected-date-label">Select a Date</span></h2>
-            <div id="filtered-task-deck" class="task-deck-placedholder">
-                No target selected. Click a solar card inside the grid.
+                    <div id="mini-calendar-grid"></div>
+                </div>
+
+                <div class="container active-day-briefing">
+                    <h2 class="briefing-title"><span id="selected-date-label">Select a Date</span></h2>
+                    <div id="filtered-task-deck" class="task-deck-placedholder">
+                        No target selected. Click a solar card inside the grid.
+                    </div>
+                </div>
             </div>
         </div>
     </main>
+    <div id="event-modal" class="modal-backdrop hidden">
+        <div class="modal-card">
+            <h3>Add New Event</h3>
+            <input type="text" class="event-title" placeholder="Event Title">
+            <input type="date" class="event-date">
+            <select id="saved-tags"></select>
+            <div class="custom-tag-inputs">
+                <input type="text" placeholder="New Tag Name" class="custom-tag-name">
+                <input type="color" class="custom-tag-color">
+            </div>
+            <div class="modal-card-footer">
+                <button class="btn-cancel">Cancel</button>
+                <button class="btn-save">Save</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
