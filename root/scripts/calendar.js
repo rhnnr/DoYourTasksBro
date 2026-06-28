@@ -1,6 +1,3 @@
-let savedTasks = []; 
-let calendarEvents = [];
-
 function getMonthMetadata(year, month) {
     const firstDayIndex = new Date(year, month, 1).getDay();
     const totalDays = new Date(year, month + 1, 0).getDate();
@@ -19,10 +16,12 @@ function evaluateDayLoad(taskList, targetDate) {
     matchedTasks.forEach(task => { totalWeight += task.weight; });
 
     let threatTier = "safe";
-    if (totalWeight >= 150) {
-        threatTier = "overload";
-    } else if (totalWeight >= 100) {
+    if (totalWeight < 100) {
+        threatTier = "safe";
+    } else if (totalWeight >= 100 && totalWeight < 150 ) {
         threatTier = "warning";
+    } else {
+        threatTier = "overload";
     }
     return { matchedTasks, threatTier };
 }
@@ -34,10 +33,10 @@ function getTagColor(tagName) {
         { id: "tag-2", name: "Birthday", color: "#E91E63"}
     ];
     const matchTag = tagList.find(tag => tag.name === tagName);
-    return matchTag ? matchTag.color : "#3B82F6";
+    return matchTag ? matchTag.color: "#3B82F6";
 }
 
-function renderCalendarGrid(displayDate, taskList, eventList) {
+function renderCalendarGrid(displayDate, taskList) {
     const year = displayDate.getFullYear();
     const month = displayDate.getMonth();
     const months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
@@ -46,7 +45,6 @@ function renderCalendarGrid(displayDate, taskList, eventList) {
     document.getElementById('mini-month-year-display').textContent = `${months[month]} ${year}`;
 
     const calendarGrid = document.getElementById('calendar-grid');
-    if (!calendarGrid) return;
     calendarGrid.innerHTML = '';
 
     const { firstDayIndex, totalDays } = getMonthMetadata(year, month);
@@ -57,20 +55,17 @@ function renderCalendarGrid(displayDate, taskList, eventList) {
     calendarGrid.style.gridTemplateRows = `repeat(${rowCount}, 1fr)`;
 
     function updateBriefingDeck(targetDateString) {
-        const matchedTasks = taskList.filter(item => item.deadline === targetDateString);
-        const matchedEvents = eventList.filter(item => item.deadline === targetDateString);
-        const combinedItems = [...matchedTasks, ...matchedEvents];
-        
+        const updatedItems = taskList.filter(item => item.deadline === targetDateString);
         const deck = document.getElementById('filtered-task-deck');
-        if (!deck) return;
         deck.innerHTML = '';
 
-        if (combinedItems.length === 0) {
+        if (updatedItems.length === 0) {
             deck.innerHTML = `<div class="task-deck-placeholder">No items scheduled for this day.</div>`;
         } else {
-            combinedItems.forEach(item => {
+            updatedItems.forEach(item => {
                 const itemCard = document.createElement('div');
                 itemCard.className = 'briefing-item-card';
+                
                 const isTask = item.weight !== undefined;
                 const badgeText = isTask ? `LOAD: ${item.weight}` : `TAG: ${item.tag}`;
                 
@@ -87,12 +82,13 @@ function renderCalendarGrid(displayDate, taskList, eventList) {
                     deleteBtn.innerHTML = '&times;';
                     deleteBtn.addEventListener('click', async (e) => {
                         e.stopPropagation();
-                        const masterIndex = calendarEvents.findIndex(t => t.text === item.text && t.deadline === item.deadline && t.tag === item.tag);
+                        const masterIndex = taskList.findIndex(t => t.text === item.text && t.deadline === item.deadline && t.tag === item.tag);
                         if (masterIndex !== -1) {
-                            calendarEvents.splice(masterIndex, 1);
-                            localStorage.setItem('doyourtasksbro_events', JSON.stringify(calendarEvents));
-                            if (window.LiveSync) await LiveSync.pushData('calendar_data', calendarEvents);
-                            renderCalendarGrid(displayDate, taskList, calendarEvents);
+                            taskList.splice(masterIndex, 1);
+                            localStorage.setItem('doyourtasksbro_data', JSON.stringify(taskList));
+                            if (window.LiveSync) await LiveSync.pushData('tasks_data', taskList);
+                            
+                            renderCalendarGrid(displayDate, taskList);
                             updateBriefingDeck(targetDateString);
                         }
                     });
@@ -111,8 +107,9 @@ function renderCalendarGrid(displayDate, taskList, eventList) {
 
     for (let day = 1; day <= totalDays; day++) {
         const dateString = formatSystemDate(year, month, day);
-        const dailyTasks = taskList.filter(item => item.deadline === dateString);
-        const dailyEvents = eventList.filter(item => item.deadline === dateString);
+        const dayItems = taskList.filter(item => item.deadline === dateString);
+        const dailyTasks = dayItems.filter(item => item.weight !== undefined);
+        const dailyEvents = dayItems.filter(item => item.tag !== undefined);
         const { threatTier } = evaluateDayLoad(dailyTasks, dateString);
 
         const dayCell = document.createElement('div');
@@ -177,7 +174,6 @@ function renderCalendarGrid(displayDate, taskList, eventList) {
     }
 
     const miniCalendarGrid = document.getElementById('mini-calendar-grid');
-    if (!miniCalendarGrid) return;
     miniCalendarGrid.innerHTML = '';
 
     for (let i = 0; i < firstDayIndex; i++) {
@@ -188,7 +184,8 @@ function renderCalendarGrid(displayDate, taskList, eventList) {
 
     for (let day = 1; day <= totalDays; day++) {
         const dateString = formatSystemDate(year, month, day);
-        const dailyEvents = eventList.filter(item => item.deadline === dateString);
+        const dayItems = taskList.filter(item => item.deadline === dateString);
+        const dailyEvents = dayItems.filter(item => item.tag !== undefined);
 
         const miniDayCell = document.createElement('div');
         miniDayCell.classList.add('mini-day');
@@ -205,87 +202,111 @@ function renderCalendarGrid(displayDate, taskList, eventList) {
     }
 }
 
-function initializeCalendarLifecycle() {
+document.addEventListener("DOMContentLoaded", async () => {
     let currentViewDate = new Date();
     
-    savedTasks = JSON.parse(localStorage.getItem("doyourtasksbro_data")) || [];
-    calendarEvents = JSON.parse(localStorage.getItem("doyourtasksbro_events")) || [];
-    renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
+    // Fallback load instantly from local memory
+    const localCollection = JSON.parse(localStorage.getItem("doyourtasksbro_data")) || [];
+    let masterTaskList = localCollection;
+    renderCalendarGrid(currentViewDate, masterTaskList);
 
-    if (typeof LiveSync !== 'undefined') {
-        console.log("[LIVESYNC CONNECTION] Hooking up global Postgres tables...");
-        
-        LiveSync.pullData('tasks_data').then(cloudTasks => {
-            if (cloudTasks !== null) {
-                savedTasks = cloudTasks;
-                renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
-            }
-        });
-
-        LiveSync.pullData('calendar_data').then(cloudEvents => {
-            if (cloudEvents !== null) {
-                calendarEvents = cloudEvents;
-                renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
-            }
-        });
+    // Pull down from the database
+    if (window.LiveSync) {
+        const cloudData = await LiveSync.pullData('tasks_data');
+        if (cloudData !== null) {
+            masterTaskList = cloudData;
+            renderCalendarGrid(currentViewDate, masterTaskList);
+        }
 
         LiveSync.connectRealtimeMatrix('tasks_data', (incomingPayload) => {
-            savedTasks = incomingPayload;
-            renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
-            localStorage.setItem('doyourtasksbro_data', JSON.stringify(savedTasks));
+            masterTaskList = incomingPayload;
+            renderCalendarGrid(currentViewDate, masterTaskList);
+            localStorage.setItem('doyourtasksbro_data', JSON.stringify(masterTaskList));
         });
-
-        LiveSync.connectRealtimeMatrix('calendar_data', (incomingPayload) => {
-            calendarEvents = incomingPayload;
-            renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
-            localStorage.setItem('doyourtasksbro_events', JSON.stringify(calendarEvents));
-        });
-    } else {
-        console.warn("[RETRY] LiveSync object not instantiated yet. Retrying bridge... ");
     }
 
+    // --- RESTORED ORIGINAL MODAL CONTROLS ---
     const prevBtn = document.getElementById("prev-month-btn");
     const nextBtn = document.getElementById("next-month-btn");
-    if (prevBtn) prevBtn.onclick = () => { currentViewDate.setMonth(currentViewDate.getMonth() - 1); renderCalendarGrid(currentViewDate, savedTasks, calendarEvents); };
-    if (nextBtn) nextBtn.onclick = () => { currentViewDate.setMonth(currentViewDate.getMonth() + 1); renderCalendarGrid(currentViewDate, savedTasks, calendarEvents); };
+    const miniButtons = document.querySelectorAll('.mini-calendar-nav-controls .mini-nav-btn');
 
-    const saveBtn = document.querySelector('.btn-save');
-    if (saveBtn) {
-        saveBtn.onclick = async (event) => {
-            event.preventDefault();
-            const selectTags = document.querySelector('#saved-tags');
-            const eventTitle = document.querySelector('.event-title');
-            const eventDate = document.querySelector('.event-date');
-            const customTagName = document.querySelector('.custom-tag-name');
-            const customTagColor = document.querySelector('.custom-tag-color');
-            const eventModal = document.getElementById('event-modal');
-
-            let finalTagName = selectTags ? selectTags.value : "General";
-
-            if (selectTags && selectTags.value === 'new' && customTagName) {
-                finalTagName = customTagName.value;
-                const storedTags = JSON.parse(localStorage.getItem("doyourtasksbro_tags")) || [];
-                storedTags.push({ name: customTagName.value, color: customTagColor.value });
-                localStorage.setItem('doyourtasksbro_tags', JSON.stringify(storedTags));
-            }
-
-            calendarEvents.push({ text: eventTitle.value, deadline: eventDate.value, tag: finalTagName });
-            localStorage.setItem('doyourtasksbro_events', JSON.stringify(calendarEvents));
-            
-            if (typeof LiveSync !== 'undefined') await LiveSync.pushData('calendar_data', calendarEvents);
-
-            if (eventModal) eventModal.classList.add('hidden');
-            if (eventTitle) eventTitle.value = '';
-            if (customTagName) customTagName.value = '';
-            renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
-        };
+    if (miniButtons.length >= 2) {
+        miniButtons[0].addEventListener("click", () => prevBtn.click());
+        miniButtons[1].addEventListener("click", () => nextBtn.click());
     }
-}
 
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-        setTimeout(initializeCalendarLifecycle, 50);
+    prevBtn.addEventListener("click", () => {
+        currentViewDate.setMonth(currentViewDate.getMonth() - 1);
+        renderCalendarGrid(currentViewDate, masterTaskList);
     });
-} else {
-    setTimeout(initializeCalendarLifecycle, 50);
-}
+
+    nextBtn.addEventListener("click", () => {
+        currentViewDate.setMonth(currentViewDate.getMonth() + 1);
+        renderCalendarGrid(currentViewDate, masterTaskList);
+    });
+
+    const openModalBtn = document.getElementById('open-modal-btn');
+    const eventModal = document.getElementById('event-modal');
+    const selectTags = document.querySelector('#saved-tags');
+    const cancelBtn = document.querySelector('.btn-cancel');
+    const saveBtn = document.querySelector('.btn-save');
+    const eventTitle = document.querySelector('.event-title');
+    const eventDate = document.querySelector('.event-date');
+
+    function fetchTagCollection() {
+        const storedTags = JSON.parse(localStorage.getItem("doyourtasksbro_tags"));
+        if (storedTags === null) {
+            const defaultTags = [{ id: "tag-1", name: "Exam", color: "#FF9800" }, { id: "tag-2", name: "Birthday", color: "#E91E63"}];
+            localStorage.setItem("doyourtasksbro_tags", JSON.stringify(defaultTags));
+            return defaultTags;
+        }
+        return storedTags;
+    }
+
+    function dropDownMenu() {
+        if (!selectTags) return;
+        const tagsList = fetchTagCollection();
+        selectTags.innerHTML = "";
+        tagsList.forEach((tag) => {
+            const option = document.createElement('option');
+            option.text = tag.name; option.value = tag.name;
+            selectTags.appendChild(option);
+        });
+        const newTagOption = document.createElement('option');
+        newTagOption.value = 'new'; newTagOption.text = '+ Create New Tag';
+        selectTags.appendChild(newTagOption);
+    }
+    dropDownMenu();
+
+    if (selectTags) selectTags.addEventListener('change', () => {
+        const tagInputs = document.querySelector('.custom-tag-inputs');
+        if (tagInputs) selectTags.value === 'new' ? tagInputs.classList.remove('hidden') : tagInputs.classList.add('hidden');
+    });
+
+    openModalBtn.addEventListener('click', () => { eventModal.classList.remove('hidden'); });
+    cancelBtn.addEventListener('click', () => { eventModal.classList.add('hidden'); });
+    
+    saveBtn.addEventListener('click', async (event) => {
+        event.preventDefault();
+        let finalTagName = selectTags.value;
+        const customTagName = document.querySelector('.custom-tag-name');
+        const customTagColor = document.querySelector('.custom-tag-color');
+
+        if (selectTags.value === 'new' && customTagName) {
+            finalTagName = customTagName.value;
+            const currentTags = fetchTagCollection();
+            currentTags.push({ name: customTagName.value, color: customTagColor.value });
+            localStorage.setItem('doyourtasksbro_tags', JSON.stringify(currentTags));
+            dropDownMenu();
+        }
+
+        masterTaskList.push({ text: eventTitle.value, deadline: eventDate.value, tag: finalTagName });
+        localStorage.setItem('doyourtasksbro_data', JSON.stringify(masterTaskList));
+        if (window.LiveSync) await LiveSync.pushData('tasks_data', masterTaskList);
+
+        eventModal.classList.add('hidden');
+        eventTitle.value = '';
+        if (customTagName) customTagName.value = '';
+        renderCalendarGrid(currentViewDate, masterTaskList);
+    });
+});
