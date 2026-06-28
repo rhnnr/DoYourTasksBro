@@ -1,5 +1,7 @@
 let taskList = []; 
 let taskHistory = [];
+let warningThreshold = 300;
+let overloadThreshold = 600;
 
 const toggleButton = document.getElementById('toggle-btn');
 const sideBar = document.getElementById('sidebar');
@@ -14,11 +16,6 @@ function toggleSidebar() {
     toggleButton.classList.toggle('rotate');
     localStorage.setItem('sidebar_closed', isClosed);
 }
-
-const storedWarn = localStorage.getItem('todo_warn_threshold');
-const storedOverload = localStorage.getItem('todo_overload_threshold');
-const warningThreshold = storedWarn !== null ? Number(storedWarn) : 300;
-const overloadThreshold = storedOverload !== null ? Number(storedOverload) : 600;
 
 const taskForm = document.getElementById('task-form');
 const taskInput = document.getElementById('task-input'); 
@@ -38,6 +35,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     console.log("[BOOT] Fetching data vectors from Supabase...");
     
+    const cloudSettings = await LiveSync.pullData('settings_data');
+    if (cloudSettings) {
+        warningThreshold = cloudSettings.warn;
+        overloadThreshold = cloudSettings.overload;
+        localStorage.setItem('todo_warn_threshold', warningThreshold);
+        localStorage.setItem('todo_overload_threshold', overloadThreshold);
+    } else {
+        warningThreshold = Number(localStorage.getItem('todo_warn_threshold') || 300);
+        overloadThreshold = Number(localStorage.getItem('todo_overload_threshold') || 600);
+    }
+
     const cloudTasks = await LiveSync.pullData('tasks_data');
     const cloudHistory = await LiveSync.pullData('history_data');
 
@@ -45,7 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         taskList = cloudTasks;
     } else {
         const savedData = localStorage.getItem('doyourtasksbro_data');
-        taskList = savedData ? JSON.parse(savedData).filter(item => item.weight !== undefined) : [];
+        taskList = savedData ? JSON.parse(savedData) : [];
     }
 
     if (cloudHistory !== null) {
@@ -71,6 +79,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         renderHistory();
         localStorage.setItem('doyourtasksbro_history', JSON.stringify(taskHistory));
     });
+
+    LiveSync.connectRealtimeMatrix('settings_data', (incomingSettings) => {
+        warningThreshold = incomingSettings.warn;
+        overloadThreshold = incomingSettings.overload;
+        updateGlobalMetrics();
+    });
 });
 
 taskInput.addEventListener('input', () => {
@@ -81,7 +95,6 @@ taskInput.addEventListener('input', () => {
 taskForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const cleanText = taskInput.value.trim();
-
     if (cleanText.length === 0) return;
 
     const taskObject = {
@@ -92,7 +105,6 @@ taskForm.addEventListener('submit', async (e) => {
     };
 
     taskList.push(taskObject); 
-    
     renderBoard(); 
     taskInput.value = '';
     taskDeadline.value = '';
@@ -111,7 +123,6 @@ function renderBoard() {
     });
 
     gravityBoard.innerHTML = ''; 
-
     taskList.forEach(task => {
         const card = document.createElement('div'); 
         card.classList.add('card');
@@ -144,7 +155,6 @@ function renderBoard() {
         deleteBtn.addEventListener('click', () => {
             task.completedAt = Date.now();
             taskHistory.push(task);
-
             taskList = taskList.filter(taskItem => taskItem.id !== task.id); 
             renderBoard(); 
             updateGlobalMetrics();
@@ -154,7 +164,6 @@ function renderBoard() {
         cardFooter.appendChild(deleteBtn);
         card.appendChild(cardFooter);
         card.style.setProperty('--card-weight', task.weight); 
-
         gravityBoard.appendChild(card);
     });
 }
@@ -165,18 +174,15 @@ function updateGlobalMetrics() {
     scoreNum.textContent = totalScore;
 
     if (totalScore < warningThreshold) {
-        document.body.classList.remove('theme-warning', 'theme-overload');
-        document.body.classList.add('theme-safe');
+        document.body.className = 'theme-safe';
         taskAdd.disabled = false;
         taskInput.disabled = false;
     } else if (totalScore >= warningThreshold && totalScore < overloadThreshold) {
-        document.body.classList.remove('theme-safe', 'theme-overload');
-        document.body.classList.add('theme-warning');
+        document.body.className = 'theme-warning';
         taskAdd.disabled = false;
         taskInput.disabled = false;
     } else {
-        document.body.classList.remove('theme-safe', 'theme-warning');
-        document.body.classList.add('theme-overload');
+        document.body.className = 'theme-overload';
         taskAdd.disabled = true;
         taskInput.disabled = true;
     }
@@ -185,7 +191,6 @@ function updateGlobalMetrics() {
 function saveAndSyncData() {
     localStorage.setItem('doyourtasksbro_data', JSON.stringify(taskList));
     localStorage.setItem('doyourtasksbro_history', JSON.stringify(taskHistory));
-
     LiveSync.pushData('tasks_data', taskList);
     LiveSync.pushData('history_data', taskHistory);
 }
@@ -193,7 +198,6 @@ function saveAndSyncData() {
 function renderHistory() {
     const historyLog = document.getElementById('history-log');
     historyLog.innerHTML = '';
-
     taskHistory.forEach(taskhistory => {
         const historyList = document.createElement('p');
         historyList.classList.add('history-item');
