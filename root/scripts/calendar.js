@@ -1,4 +1,4 @@
-let savedTasks = [];
+let savedTasks = []; 
 
 function getMonthMetadata(year, month) {
     const firstDayIndex = new Date(year, month, 1).getDay();
@@ -14,17 +14,10 @@ function formatSystemDate(year, month, day) {
 
 function evaluateDayLoad(taskList, targetDate) {
     const matchedTasks = taskList.filter(task => task.deadline === targetDate);
-
     let totalWeight = 0;
-    matchedTasks.forEach(task => {
-        totalWeight += task.weight;
-    });
-
-    const storedWarn = localStorage.getItem('todo_warn_threshold');
-    const warningLimit = storedWarn !== null ? Number(storedWarn) : 300;
+    matchedTasks.forEach(task => { totalWeight += task.weight; });
 
     let threatTier = "safe";
-
     if (totalWeight < 100) {
         threatTier = "safe";
     } else if (totalWeight >= 100 && totalWeight < 150 ) {
@@ -32,7 +25,6 @@ function evaluateDayLoad(taskList, targetDate) {
     } else {
         threatTier = "overload";
     }
-
     return { matchedTasks, threatTier };
 }
 
@@ -42,24 +34,20 @@ function getTagColor(tagName) {
         { id: "tag-1", name: "Exam", color: "#FF9800"},
         { id: "tag-2", name: "Birthday", color: "#E91E63"}
     ];
-
     const matchTag = tagList.find(tag => tag.name === tagName);
-    return matchTag ? matchTag.color: "#3B82F6";
+    return matchTag ? matchTag.color : "#3B82F6";
 }
 
 function renderCalendarGrid(displayDate, taskList) {
     const year = displayDate.getFullYear();
     const month = displayDate.getMonth();
-
-    const months = [
-        "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
-        "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
-    ];
+    const months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
     document.getElementById('month-year-display').textContent = `${months[month]} ${year}`;
     document.getElementById('mini-month-year-display').textContent = `${months[month]} ${year}`;
 
     const calendarGrid = document.getElementById('calendar-grid');
+    if (!calendarGrid) return;
     calendarGrid.innerHTML = '';
 
     const { firstDayIndex, totalDays } = getMonthMetadata(year, month);
@@ -72,6 +60,7 @@ function renderCalendarGrid(displayDate, taskList) {
     function updateBriefingDeck(targetDateString) {
         const updatedItems = taskList.filter(item => item.deadline === targetDateString);
         const deck = document.getElementById('filtered-task-deck');
+        if (!deck) return;
         deck.innerHTML = '';
 
         if (updatedItems.length === 0) {
@@ -80,7 +69,6 @@ function renderCalendarGrid(displayDate, taskList) {
             updatedItems.forEach(item => {
                 const itemCard = document.createElement('div');
                 itemCard.className = 'briefing-item-card';
-                
                 const isTask = item.weight !== undefined;
                 const badgeText = isTask ? `LOAD: ${item.weight}` : `TAG: ${item.tag}`;
                 
@@ -95,32 +83,17 @@ function renderCalendarGrid(displayDate, taskList) {
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'event-delete-btn';
                     deleteBtn.innerHTML = '&times;';
-                    deleteBtn.title = 'Delete Event';
-                    
                     deleteBtn.addEventListener('click', async (e) => {
                         e.stopPropagation();
-                        
                         const masterIndex = taskList.findIndex(t => t.text === item.text && t.deadline === item.deadline && t.tag === item.tag);
-                        
                         if (masterIndex !== -1) {
                             taskList.splice(masterIndex, 1);
-                            
-                            // Propagate changes globally straight back up to database pipelines
                             localStorage.setItem('doyourtasksbro_data', JSON.stringify(taskList));
-                            await LiveSync.pushData('tasks_data', taskList);
-                            
+                            if (window.LiveSync) await LiveSync.pushData('tasks_data', taskList);
                             renderCalendarGrid(displayDate, taskList);
                             updateBriefingDeck(targetDateString);
-                            
-                            document.querySelectorAll('.calendar-day').forEach(cell => {
-                                const numLabel = cell.querySelector('.day-number');
-                                if (numLabel && formatSystemDate(year, month, parseInt(numLabel.textContent)) === targetDateString) {
-                                    cell.classList.add('selected');
-                                }
-                            });
                         }
                     });
-                    
                     itemCard.appendChild(deleteBtn);
                 }
                 deck.appendChild(itemCard);
@@ -136,21 +109,15 @@ function renderCalendarGrid(displayDate, taskList) {
 
     for (let day = 1; day <= totalDays; day++) {
         const dateString = formatSystemDate(year, month, day);
-
         const dayItems = taskList.filter(item => item.deadline === dateString);
         const dailyTasks = dayItems.filter(item => item.weight !== undefined);
         const dailyEvents = dayItems.filter(item => item.tag !== undefined);
-
         const { threatTier } = evaluateDayLoad(dailyTasks, dateString);
 
         const dayCell = document.createElement('div');
         dayCell.classList.add('calendar-day');
 
-        if (
-            day === realTimeToday.getDate() &&
-            month === realTimeToday.getMonth() &&
-            year === realTimeToday.getFullYear()
-        ) {
+        if (day === realTimeToday.getDate() && month === realTimeToday.getMonth() && year === realTimeToday.getFullYear()) {
             dayCell.classList.add('today');
         }
 
@@ -165,10 +132,8 @@ function renderCalendarGrid(displayDate, taskList) {
         if (dailyTasks.length > 0) {
             const dotContainer = document.createElement('div');
             dotContainer.classList.add('dot-container');
-
             const dot = document.createElement('span');
             dot.classList.add('indicator-dot', `dot-${threatTier}`);
-
             dotContainer.appendChild(dot);
             headerRow.appendChild(dotContainer);
         }
@@ -180,57 +145,38 @@ function renderCalendarGrid(displayDate, taskList) {
                 dailyEvents.forEach(eventItem => {
                     const eventColor = getTagColor(eventItem.tag);
                     const ribbonElement = document.createElement('div');
-
                     ribbonElement.classList.add('event-ribbon');
                     ribbonElement.textContent = eventItem.text;
                     ribbonElement.style.backgroundColor = eventColor;
-                    
                     dayCell.appendChild(ribbonElement);
                 });
             } else {
                 const chipContainer = document.createElement('div');
                 chipContainer.classList.add('event-chip-container');
-
-                const maxVisibleChips = 4;
-                const visibleEvents = dailyEvents.slice(0, maxVisibleChips);
-
+                const visibleEvents = dailyEvents.slice(0, 4);
                 visibleEvents.forEach(eventItem => {
                     const eventColor = getTagColor(eventItem.tag);
                     const chipElement = document.createElement('div');
-                    
                     chipElement.classList.add('event-color-chip');
                     chipElement.style.backgroundColor = eventColor;
-                    chipElement.title = eventItem.text; 
-                    
+                    chipElement.title = eventItem.text;
                     chipContainer.appendChild(chipElement);
                 });
-
                 dayCell.appendChild(chipContainer);
-
-                if (dailyEvents.length > maxVisibleChips) {
-                    const overflowLabel = document.createElement('span');
-                    overflowLabel.classList.add('event-overflow-counter');
-                    overflowLabel.textContent = '...';
-                    dayCell.appendChild(overflowLabel);
-                }
             }
         }
 
         dayCell.addEventListener('click', () => {
-            document.querySelectorAll('.calendar-day.selected').forEach(el => {
-                el.classList.remove('selected');
-            });
-
+            document.querySelectorAll('.calendar-day.selected').forEach(el => el.classList.remove('selected'));
             dayCell.classList.add('selected');
             document.getElementById('selected-date-label').textContent = dateString;
-
             updateBriefingDeck(dateString);
         });
-        
         calendarGrid.appendChild(dayCell);
     }
 
     const miniCalendarGrid = document.getElementById('mini-calendar-grid');
+    if (!miniCalendarGrid) return;
     miniCalendarGrid.innerHTML = '';
 
     for (let i = 0; i < firstDayIndex; i++) {
@@ -251,22 +197,9 @@ function renderCalendarGrid(displayDate, taskList) {
         if (dailyEvents.length > 0) {
             const miniDot = document.createElement('span');
             miniDot.classList.add('indicator-dot');
-
             const dotColor = getTagColor(dailyEvents[0].tag);
             miniDot.style.backgroundColor = dotColor;
-            miniDot.style.boxShadow = `0 0 6px ${dotColor}`;
-
             miniDayCell.appendChild(miniDot);
-        }
-
-        if (
-            day === realTimeToday.getDate() &&
-            month === realTimeToday.getMonth() &&
-            year === realTimeToday.getFullYear()
-        ) {
-            miniDayCell.style.border = '1px solid var(--selected-bg)';
-            miniDayCell.style.color = 'var(--selected-bg)';
-            miniDayCell.style.fontWeight = '700';
         }
         miniCalendarGrid.appendChild(miniDayCell);
     }
@@ -275,41 +208,34 @@ function renderCalendarGrid(displayDate, taskList) {
 document.addEventListener("DOMContentLoaded", async () => {
     let currentViewDate = new Date();
     
-    console.log("[BOOT] Loading Cloud Radar Grid Vectors...");
-    const cloudTasks = await LiveSync.pullData('tasks_data');
-
-    if (cloudTasks !== null) {
-        savedTasks = cloudTasks;
-    } else {
-        savedTasks = JSON.parse(localStorage.getItem("doyourtasksbro_data")) || [];
-    }
-
+    // Fallback load safety block
+    const savedData = localStorage.getItem("doyourtasksbro_data");
+    savedTasks = savedData ? JSON.parse(savedData) : [];
     renderCalendarGrid(currentViewDate, savedTasks);
 
-    LiveSync.connectRealtimeMatrix('tasks_data', (incomingPayload) => {
-        savedTasks = incomingPayload;
-        renderCalendarGrid(currentViewDate, savedTasks);
-        localStorage.setItem('doyourtasksbro_data', JSON.stringify(savedTasks));
-    });
+    // Dynamic asynchronous update block from cloud
+    if (window.LiveSync) {
+        const cloudTasks = await LiveSync.pullData('tasks_data');
+        if (cloudTasks !== null) {
+            savedTasks = cloudTasks;
+            renderCalendarGrid(currentViewDate, savedTasks);
+        }
+        LiveSync.connectRealtimeMatrix('tasks_data', (incomingPayload) => {
+            savedTasks = incomingPayload;
+            renderCalendarGrid(currentViewDate, savedTasks);
+        });
+    }
+
+    // Bind custom UI layout click actions cleanly to circumvent defer limits
+    const sidebarToggle = document.getElementById('sidebar-toggle-btn');
+    if (sidebarToggle && window.toggleSidebar) {
+        sidebarToggle.addEventListener('click', window.toggleSidebar);
+    }
 
     const prevBtn = document.getElementById("prev-month-btn");
     const nextBtn = document.getElementById("next-month-btn");
-    const miniButtons = document.querySelectorAll('.mini-calendar-nav-controls .mini-nav-btn');
-
-    if (miniButtons.length >= 2) {
-        miniButtons[0].addEventListener("click", () => prevBtn.click());
-        miniButtons[1].addEventListener("click", () => nextBtn.click());
-    }
-
-    prevBtn.addEventListener("click", () => {
-        currentViewDate.setMonth(currentViewDate.getMonth() - 1);
-        renderCalendarGrid(currentViewDate, savedTasks);
-    });
-
-    nextBtn.addEventListener("click", () => {
-        currentViewDate.setMonth(currentViewDate.getMonth() + 1);
-        renderCalendarGrid(currentViewDate, savedTasks);
-    });
+    if (prevBtn) prevBtn.addEventListener("click", () => { currentViewDate.setMonth(currentViewDate.getMonth() - 1); renderCalendarGrid(currentViewDate, savedTasks); });
+    if (nextBtn) nextBtn.addEventListener("click", () => { currentViewDate.setMonth(currentViewDate.getMonth() + 1); renderCalendarGrid(currentViewDate, savedTasks); });
 
     const openModalBtn = document.getElementById('open-modal-btn');
     const eventModal = document.getElementById('event-modal');
@@ -321,88 +247,53 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function fetchTagCollection() {
         const storedTags = JSON.parse(localStorage.getItem("doyourtasksbro_tags"));
-        if (storedTags === null) {
-            const defaultTags = [
-                { id: "tag-1", name: "Exam", color: "#FF9800" },
-                { id: "tag-2", name: "Birthday", color: "#E91E63"}
-            ];
-            localStorage.setItem("doyourtasksbro_tags", JSON.stringify(defaultTags));
-            return defaultTags;
-        }
-        return storedTags;
+        return storedTags || [{ id: "tag-1", name: "Exam", color: "#FF9800" }, { id: "tag-2", name: "Birthday", color: "#E91E63"}];
     }
 
     function dropDownMenu() {
+        if (!selectTags) return;
         const tagsList = fetchTagCollection();
         selectTags.innerHTML = "";
-
         tagsList.forEach((tag) => {
             const option = document.createElement('option');
-            option.text = tag.name;
-            option.value = tag.name;
+            option.text = tag.name; option.value = tag.name;
             selectTags.appendChild(option);
         });
-
         const newTagOption = document.createElement('option');
-        newTagOption.value = 'new';
-        newTagOption.text = '+ Create New Tag';
+        newTagOption.value = 'new'; newTagOption.text = '+ Create New Tag';
         selectTags.appendChild(newTagOption);
     }
     dropDownMenu();
 
-    selectTags.addEventListener('change', () => {
-        const tagValues = selectTags.value;
+    if (selectTags) selectTags.addEventListener('change', () => {
         const tagInputs = document.querySelector('.custom-tag-inputs');
-        if (tagValues === 'new') {
-            tagInputs.classList.remove('hidden');
-        } else {
-            tagInputs.classList.add('hidden');
-        }
+        if (tagInputs) selectTags.value === 'new' ? tagInputs.classList.remove('hidden') : tagInputs.classList.add('hidden');
     });
 
-    openModalBtn.addEventListener('click', () => {
-        eventModal.classList.remove('hidden');
-    });
-
-    cancelBtn.addEventListener('click', () => {
-        eventModal.classList.add('hidden');
-    });
+    if (openModalBtn) openModalBtn.addEventListener('click', () => eventModal?.classList.remove('hidden'));
+    if (cancelBtn) cancelBtn.addEventListener('click', () => eventModal?.classList.add('hidden'));
     
-    saveBtn.addEventListener('click', async (event) => {
+    if (saveBtn) saveBtn.addEventListener('click', async (event) => {
         event.preventDefault();
-        let finalTagName = "";
+        let finalTagName = selectTags.value;
         const customTagName = document.querySelector('.custom-tag-name');
         const customTagColor = document.querySelector('.custom-tag-color');
-        const tagValues = selectTags.value;
 
-        if (tagValues === 'new') {
+        if (selectTags.value === 'new' && customTagName) {
             finalTagName = customTagName.value;
-            const newTag = {
-                name: customTagName.value,
-                color: customTagColor.value
-            };
             const currentTags = fetchTagCollection();
-            currentTags.push(newTag);
+            currentTags.push({ name: customTagName.value, color: customTagColor.value });
             localStorage.setItem('doyourtasksbro_tags', JSON.stringify(currentTags));
             dropDownMenu();
-        } else {
-            finalTagName = selectTags.value;
         }
 
-        const newEventObj = {
-            text: eventTitle.value,
-            deadline: eventDate.value,
-            tag: finalTagName
-        }
-        savedTasks.push(newEventObj);
-        
+        savedTasks.push({ text: eventTitle.value, deadline: eventDate.value, tag: finalTagName });
         localStorage.setItem('doyourtasksbro_data', JSON.stringify(savedTasks));
-        await LiveSync.pushData('tasks_data', savedTasks);
+        if (window.LiveSync) await LiveSync.pushData('tasks_data', savedTasks);
 
-        eventModal.classList.add('hidden');
-        eventTitle.value = '';
-        customTagName.value = '';
-
+        if (eventModal) eventModal.classList.add('hidden');
+        if (eventTitle) eventTitle.value = '';
+        if (customTagName) customTagName.value = '';
         renderCalendarGrid(currentViewDate, savedTasks);
     });
 });
