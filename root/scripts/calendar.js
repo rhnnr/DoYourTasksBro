@@ -1,3 +1,5 @@
+let savedTasks = [];
+
 function getMonthMetadata(year, month) {
     const firstDayIndex = new Date(year, month, 1).getDay();
     const totalDays = new Date(year, month + 1, 0).getDate();
@@ -45,6 +47,7 @@ function renderCalendarGrid(displayDate, taskList) {
     document.getElementById('mini-month-year-display').textContent = `${months[month]} ${year}`;
 
     const calendarGrid = document.getElementById('calendar-grid');
+    if (!calendarGrid) return;
     calendarGrid.innerHTML = '';
 
     const { firstDayIndex, totalDays } = getMonthMetadata(year, month);
@@ -57,6 +60,7 @@ function renderCalendarGrid(displayDate, taskList) {
     function updateBriefingDeck(targetDateString) {
         const updatedItems = taskList.filter(item => item.deadline === targetDateString);
         const deck = document.getElementById('filtered-task-deck');
+        if (!deck) return;
         deck.innerHTML = '';
 
         if (updatedItems.length === 0) {
@@ -80,6 +84,8 @@ function renderCalendarGrid(displayDate, taskList) {
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'event-delete-btn';
                     deleteBtn.innerHTML = '&times;';
+                    deleteBtn.title = 'Delete Event';
+                    
                     deleteBtn.addEventListener('click', async (e) => {
                         e.stopPropagation();
                         const masterIndex = taskList.findIndex(t => t.text === item.text && t.deadline === item.deadline && t.tag === item.tag);
@@ -174,6 +180,7 @@ function renderCalendarGrid(displayDate, taskList) {
     }
 
     const miniCalendarGrid = document.getElementById('mini-calendar-grid');
+    if (!miniCalendarGrid) return;
     miniCalendarGrid.innerHTML = '';
 
     for (let i = 0; i < firstDayIndex; i++) {
@@ -205,27 +212,25 @@ function renderCalendarGrid(displayDate, taskList) {
 document.addEventListener("DOMContentLoaded", async () => {
     let currentViewDate = new Date();
     
-    // Fallback load instantly from local memory
-    const localCollection = JSON.parse(localStorage.getItem("doyourtasksbro_data")) || [];
-    let masterTaskList = localCollection;
-    renderCalendarGrid(currentViewDate, masterTaskList);
+    // Mount instantly from local data cache
+    savedTasks = JSON.parse(localStorage.getItem("doyourtasksbro_data")) || [];
+    renderCalendarGrid(currentViewDate, savedTasks);
 
-    // Pull down from the database
     if (window.LiveSync) {
-        const cloudData = await LiveSync.pullData('tasks_data');
-        if (cloudData !== null) {
-            masterTaskList = cloudData;
-            renderCalendarGrid(currentViewDate, masterTaskList);
+        const cloudTasks = await LiveSync.pullData('tasks_data');
+        if (cloudTasks !== null) {
+            savedTasks = cloudTasks;
+            renderCalendarGrid(currentViewDate, savedTasks);
         }
 
         LiveSync.connectRealtimeMatrix('tasks_data', (incomingPayload) => {
-            masterTaskList = incomingPayload;
-            renderCalendarGrid(currentViewDate, masterTaskList);
-            localStorage.setItem('doyourtasksbro_data', JSON.stringify(masterTaskList));
+            savedTasks = incomingPayload;
+            renderCalendarGrid(currentViewDate, savedTasks);
+            localStorage.setItem('doyourtasksbro_data', JSON.stringify(savedTasks));
         });
     }
 
-    // --- RESTORED ORIGINAL MODAL CONTROLS ---
+    // Modal UI Listeners
     const prevBtn = document.getElementById("prev-month-btn");
     const nextBtn = document.getElementById("next-month-btn");
     const miniButtons = document.querySelectorAll('.mini-calendar-nav-controls .mini-nav-btn');
@@ -235,15 +240,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         miniButtons[1].addEventListener("click", () => nextBtn.click());
     }
 
-    prevBtn.addEventListener("click", () => {
-        currentViewDate.setMonth(currentViewDate.getMonth() - 1);
-        renderCalendarGrid(currentViewDate, masterTaskList);
-    });
-
-    nextBtn.addEventListener("click", () => {
-        currentViewDate.setMonth(currentViewDate.getMonth() + 1);
-        renderCalendarGrid(currentViewDate, masterTaskList);
-    });
+    if (prevBtn) prevBtn.addEventListener("click", () => { currentViewDate.setMonth(currentViewDate.getMonth() - 1); renderCalendarGrid(currentViewDate, savedTasks); });
+    if (nextBtn) nextBtn.addEventListener("click", () => { currentViewDate.setMonth(currentViewDate.getMonth() + 1); renderCalendarGrid(currentViewDate, savedTasks); });
 
     const openModalBtn = document.getElementById('open-modal-btn');
     const eventModal = document.getElementById('event-modal');
@@ -255,12 +253,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function fetchTagCollection() {
         const storedTags = JSON.parse(localStorage.getItem("doyourtasksbro_tags"));
-        if (storedTags === null) {
-            const defaultTags = [{ id: "tag-1", name: "Exam", color: "#FF9800" }, { id: "tag-2", name: "Birthday", color: "#E91E63"}];
-            localStorage.setItem("doyourtasksbro_tags", JSON.stringify(defaultTags));
-            return defaultTags;
-        }
-        return storedTags;
+        return storedTags || [{ id: "tag-1", name: "Exam", color: "#FF9800" }, { id: "tag-2", name: "Birthday", color: "#E91E63"}];
     }
 
     function dropDownMenu() {
@@ -283,10 +276,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (tagInputs) selectTags.value === 'new' ? tagInputs.classList.remove('hidden') : tagInputs.classList.add('hidden');
     });
 
-    openModalBtn.addEventListener('click', () => { eventModal.classList.remove('hidden'); });
-    cancelBtn.addEventListener('click', () => { eventModal.classList.add('hidden'); });
+    if (openModalBtn) openModalBtn.addEventListener('click', () => eventModal.classList.remove('hidden'));
+    if (cancelBtn) cancelBtn.addEventListener('click', () => eventModal.classList.add('hidden'));
     
-    saveBtn.addEventListener('click', async (event) => {
+    if (saveBtn) saveBtn.addEventListener('click', async (event) => {
         event.preventDefault();
         let finalTagName = selectTags.value;
         const customTagName = document.querySelector('.custom-tag-name');
@@ -300,13 +293,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             dropDownMenu();
         }
 
-        masterTaskList.push({ text: eventTitle.value, deadline: eventDate.value, tag: finalTagName });
-        localStorage.setItem('doyourtasksbro_data', JSON.stringify(masterTaskList));
-        if (window.LiveSync) await LiveSync.pushData('tasks_data', masterTaskList);
+        savedTasks.push({ text: eventTitle.value, deadline: eventDate.value, tag: finalTagName });
+        localStorage.setItem('doyourtasksbro_data', JSON.stringify(savedTasks));
+        if (window.LiveSync) await LiveSync.pushData('tasks_data', savedTasks);
 
         eventModal.classList.add('hidden');
         eventTitle.value = '';
         if (customTagName) customTagName.value = '';
-        renderCalendarGrid(currentViewDate, masterTaskList);
+        renderCalendarGrid(currentViewDate, savedTasks);
     });
 });
