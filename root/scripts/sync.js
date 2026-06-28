@@ -39,14 +39,13 @@ const LiveSync = {
 
     connectRealtimeMatrix(slotId, executionCallback) {
         db
-            .channel(`channel-${slotId}`)
-            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'user_matrix' }, 
+            .channel(`live-${slotId}`)
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'user_matrix', filter: `id=eq.${slotId}` }, 
             payload => {
-                if (payload.new && payload.new.id === slotId) {
-                    console.log(`[REALTIME RECEPTION] Validated channel update received for row: ${slotId}`);
-                    executionCallback(payload.new.payload);
-                }
+                console.log(`[REALTIME RECEPTION] External write detected on cloud slot: ${slotId}`)
             })
             .subscribe();
     }
 };
+
+window.LiveSync = LiveSync;

@@ -13,14 +13,14 @@ function formatSystemDate(year, month, day) {
 }
 
 function evaluateDayLoad(taskList, targetDate) {
-    const matchedTasks = taskList.filter(task => task.deadline === targetDate);
+    const matchedTasks = taskList.filter(task => task && task.deadline === targetDate);
     let totalWeight = 0;
-    matchedTasks.forEach(task => { totalWeight += task.weight; });
+    matchedTasks.forEach(task => { if (task.weight) totalWeight += task.weight; });
 
     let threatTier = "safe";
     if (totalWeight < 100) {
         threatTier = "safe";
-    } else if (totalWeight >= 100 && totalWeight < 150 ) {
+    } else if (totalWeight >= 100 && totalWeight < 150) {
         threatTier = "warning";
     } else {
         threatTier = "overload";
@@ -35,7 +35,7 @@ function getTagColor(tagName) {
         { id: "tag-2", name: "Birthday", color: "#E91E63"}
     ];
     const matchTag = tagList.find(tag => tag.name === tagName);
-    return matchTag ? matchTag.color: "#3B82F6";
+    return matchTag ? matchTag.color : "#3B82F6";
 }
 
 function renderCalendarGrid(displayDate, taskList) {
@@ -43,8 +43,11 @@ function renderCalendarGrid(displayDate, taskList) {
     const month = displayDate.getMonth();
     const months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
-    document.getElementById('month-year-display').textContent = `${months[month]} ${year}`;
-    document.getElementById('mini-month-year-display').textContent = `${months[month]} ${year}`;
+    const mainDisplay = document.getElementById('month-year-display');
+    const miniDisplay = document.getElementById('mini-month-year-display');
+    
+    if (mainDisplay) mainDisplay.textContent = `${months[month]} ${year}`;
+    if (miniDisplay) miniDisplay.textContent = `${months[month]} ${year}`;
 
     const calendarGrid = document.getElementById('calendar-grid');
     if (!calendarGrid) return;
@@ -58,7 +61,7 @@ function renderCalendarGrid(displayDate, taskList) {
     calendarGrid.style.gridTemplateRows = `repeat(${rowCount}, 1fr)`;
 
     function updateBriefingDeck(targetDateString) {
-        const updatedItems = taskList.filter(item => item.deadline === targetDateString);
+        const updatedItems = taskList.filter(item => item && item.deadline === targetDateString);
         const deck = document.getElementById('filtered-task-deck');
         if (!deck) return;
         deck.innerHTML = '';
@@ -84,16 +87,13 @@ function renderCalendarGrid(displayDate, taskList) {
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'event-delete-btn';
                     deleteBtn.innerHTML = '&times;';
-                    deleteBtn.title = 'Delete Event';
-                    
                     deleteBtn.addEventListener('click', async (e) => {
                         e.stopPropagation();
-                        const masterIndex = taskList.findIndex(t => t.text === item.text && t.deadline === item.deadline && t.tag === item.tag);
+                        const masterIndex = taskList.findIndex(t => t && t.text === item.text && t.deadline === item.deadline && t.tag === item.tag);
                         if (masterIndex !== -1) {
                             taskList.splice(masterIndex, 1);
                             localStorage.setItem('doyourtasksbro_data', JSON.stringify(taskList));
                             if (window.LiveSync) await LiveSync.pushData('tasks_data', taskList);
-                            
                             renderCalendarGrid(displayDate, taskList);
                             updateBriefingDeck(targetDateString);
                         }
@@ -113,7 +113,7 @@ function renderCalendarGrid(displayDate, taskList) {
 
     for (let day = 1; day <= totalDays; day++) {
         const dateString = formatSystemDate(year, month, day);
-        const dayItems = taskList.filter(item => item.deadline === dateString);
+        const dayItems = taskList.filter(item => item && item.deadline === dateString);
         const dailyTasks = dayItems.filter(item => item.weight !== undefined);
         const dailyEvents = dayItems.filter(item => item.tag !== undefined);
         const { threatTier } = evaluateDayLoad(dailyTasks, dateString);
@@ -173,7 +173,8 @@ function renderCalendarGrid(displayDate, taskList) {
         dayCell.addEventListener('click', () => {
             document.querySelectorAll('.calendar-day.selected').forEach(el => el.classList.remove('selected'));
             dayCell.classList.add('selected');
-            document.getElementById('selected-date-label').textContent = dateString;
+            const label = document.getElementById('selected-date-label');
+            if (label) label.textContent = dateString;
             updateBriefingDeck(dateString);
         });
         calendarGrid.appendChild(dayCell);
@@ -191,8 +192,7 @@ function renderCalendarGrid(displayDate, taskList) {
 
     for (let day = 1; day <= totalDays; day++) {
         const dateString = formatSystemDate(year, month, day);
-        const dayItems = taskList.filter(item => item.deadline === dateString);
-        const dailyEvents = dayItems.filter(item => item.tag !== undefined);
+        const dailyEvents = taskList.filter(item => item && item.tag !== undefined && item.deadline === dateString);
 
         const miniDayCell = document.createElement('div');
         miniDayCell.classList.add('mini-day');
@@ -211,33 +211,43 @@ function renderCalendarGrid(displayDate, taskList) {
 
 document.addEventListener("DOMContentLoaded", async () => {
     let currentViewDate = new Date();
-    
-    // Mount instantly from local data cache
-    savedTasks = JSON.parse(localStorage.getItem("doyourtasksbro_data")) || [];
-    renderCalendarGrid(currentViewDate, savedTasks);
 
-    if (window.LiveSync) {
+    let  savedTasks = JSON.parse(localStorage.getItem("doyourtasksbro_data")) || [];
+    let calendarEvents = JSON.parse(localStorage.getItem("doyourtasksbro_events")) || [];
+    renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
+
+    if (typeof LiveSync !== 'undefined') {
+        console.log("[BOOT] Loading Cloud Radar Grid Vectors...");
         const cloudTasks = await LiveSync.pullData('tasks_data');
+        const cloudEvents = await LiveSync.pullData('calendar_data');
+        
         if (cloudTasks !== null) {
             savedTasks = cloudTasks;
-            renderCalendarGrid(currentViewDate, savedTasks);
         }
+        if (cloudEvents !== null) {
+            calendarEvents = cloudEvents;
+        }
+        
+        renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
 
         LiveSync.connectRealtimeMatrix('tasks_data', (incomingPayload) => {
             savedTasks = incomingPayload;
-            renderCalendarGrid(currentViewDate, savedTasks);
-            localStorage.setItem('doyourtasksbro_data', JSON.stringify(savedTasks));
+            renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
         });
+
+        LiveSync.connectRealtimeMatrix('calendar_data', (incomingPayload) => {
+            calendarEvents = incomingPayload;
+            renderCalendarGrid(currentViewDate, savedTasks, calendarEvents);
+        });    
     }
 
-    // Modal UI Listeners
     const prevBtn = document.getElementById("prev-month-btn");
     const nextBtn = document.getElementById("next-month-btn");
     const miniButtons = document.querySelectorAll('.mini-calendar-nav-controls .mini-nav-btn');
 
     if (miniButtons.length >= 2) {
-        miniButtons[0].addEventListener("click", () => prevBtn.click());
-        miniButtons[1].addEventListener("click", () => nextBtn.click());
+        if (miniButtons[0]) miniButtons[0].addEventListener("click", () => prevBtn && prevBtn.click());
+        if (miniButtons[1]) miniButtons[1].addEventListener("click", () => nextBtn && nextBtn.click());
     }
 
     if (prevBtn) prevBtn.addEventListener("click", () => { currentViewDate.setMonth(currentViewDate.getMonth() - 1); renderCalendarGrid(currentViewDate, savedTasks); });
@@ -276,16 +286,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (tagInputs) selectTags.value === 'new' ? tagInputs.classList.remove('hidden') : tagInputs.classList.add('hidden');
     });
 
-    if (openModalBtn) openModalBtn.addEventListener('click', () => eventModal.classList.remove('hidden'));
-    if (cancelBtn) cancelBtn.addEventListener('click', () => eventModal.classList.add('hidden'));
+    if (openModalBtn && eventModal) openModalBtn.addEventListener('click', () => eventModal.classList.remove('hidden'));
+    if (cancelBtn && eventModal) cancelBtn.addEventListener('click', () => eventModal.classList.add('hidden'));
     
     if (saveBtn) saveBtn.addEventListener('click', async (event) => {
         event.preventDefault();
-        let finalTagName = selectTags.value;
+        let finalTagName = selectTags ? selectTags.value : "General";
         const customTagName = document.querySelector('.custom-tag-name');
         const customTagColor = document.querySelector('.custom-tag-color');
 
-        if (selectTags.value === 'new' && customTagName) {
+        if (selectTags && selectTags.value === 'new' && customTagName) {
             finalTagName = customTagName.value;
             const currentTags = fetchTagCollection();
             currentTags.push({ name: customTagName.value, color: customTagColor.value });
@@ -293,12 +303,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             dropDownMenu();
         }
 
-        savedTasks.push({ text: eventTitle.value, deadline: eventDate.value, tag: finalTagName });
-        localStorage.setItem('doyourtasksbro_data', JSON.stringify(savedTasks));
-        if (window.LiveSync) await LiveSync.pushData('tasks_data', savedTasks);
+        if (eventTitle && eventDate) {
+            savedTasks.push({ text: eventTitle.value, deadline: eventDate.value, tag: finalTagName });
+            localStorage.setItem('doyourtasksbro_data', JSON.stringify(savedTasks));
+            if (window.LiveSync) await LiveSync.pushData('tasks_data', savedTasks);
+        }
 
-        eventModal.classList.add('hidden');
-        eventTitle.value = '';
+        if (eventModal) eventModal.classList.add('hidden');
+        if (eventTitle) eventTitle.value = '';
         if (customTagName) customTagName.value = '';
         renderCalendarGrid(currentViewDate, savedTasks);
     });
