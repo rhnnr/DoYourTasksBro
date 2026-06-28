@@ -590,4 +590,17 @@ body.light-mode #task-deadline {
         height: auto !important;
         min-height: 160px !important;
     }
+
+    #history-log
+    {
+        max-width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .history-item
+    {
+        word-break: break-all;
+        overflow-wrap: break-word;
+    }
 }
