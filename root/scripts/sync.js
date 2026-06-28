@@ -1,4 +1,4 @@
-const SUPABASE_URL = "https://tcsfxrqvtkzqotiititj.supabase.co/rest/v1/";
+const SUPABASE_URL = "https://tcsfxrqvtkzqotiititj.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjc2Z4cnF2dGt6cW90aWl0aXRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2Njg0NzEsImV4cCI6MjA5ODI0NDQ3MX0.t3lxNXW9GND1x90UIYecxwkV_fkymqtyjckLw90e098";
 
 
