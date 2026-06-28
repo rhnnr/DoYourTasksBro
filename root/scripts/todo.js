@@ -1,4 +1,4 @@
-let taskList = []; // the global array
+let taskList = []; 
 let taskHistory = [];
 
 const toggleButton = document.getElementById('toggle-btn');
@@ -20,49 +20,69 @@ const storedOverload = localStorage.getItem('todo_overload_threshold');
 const warningThreshold = storedWarn !== null ? Number(storedWarn) : 300;
 const overloadThreshold = storedOverload !== null ? Number(storedOverload) : 600;
 
-const savedData = localStorage.getItem('doyourtasksbro_data');
-
 const taskForm = document.getElementById('task-form');
-const taskInput = document.getElementById('task-input'); // Input field
+const taskInput = document.getElementById('task-input'); 
 const taskAdd = document.getElementById('task-add');
 const taskDeadline = document.getElementById('task-deadline');
 const scoreNum = document.getElementById('score-number');
 const gravityBoard = document.getElementById('gravity-board');
 const liveCounter = document.getElementById('live-weight-counter');
 
-const savedHistory = localStorage.getItem('doyourtasksbro_history');
-
 const todoView = document.getElementById('todo-view');
 const historyView = document.getElementById('history-section');
 const tabTodo = document.getElementById('tab-todo');
 const tabHistory = document.getElementById('tab-history');
 
-if (savedHistory !== null) {
-    taskHistory = JSON.parse(savedHistory);
-} else {
-    taskHistory = [];
-}
+document.addEventListener("DOMContentLoaded", async () => {
+    initThemeState();
 
-if (savedData !== null) {
-    const allStoredItems = JSON.parse(savedData);
-    taskList = allStoredItems.filter(item => item.weight !== undefined);
-} else {
-    taskList = [];
-}
+    console.log("[BOOT] Fetching data vectors from Supabase...");
+    
+    const cloudTasks = await LiveSync.pullData('tasks_data');
+    const cloudHistory = await LiveSync.pullData('history_data');
+
+    if (cloudTasks !== null) {
+        taskList = cloudTasks;
+    } else {
+        const savedData = localStorage.getItem('doyourtasksbro_data');
+        taskList = savedData ? JSON.parse(savedData).filter(item => item.weight !== undefined) : [];
+    }
+
+    if (cloudHistory !== null) {
+        taskHistory = cloudHistory;
+    } else {
+        const savedHistory = localStorage.getItem('doyourtasksbro_history');
+        taskHistory = savedHistory ? JSON.parse(savedHistory) : [];
+    }
+
+    renderBoard();
+    updateGlobalMetrics();
+    renderHistory();
+
+    LiveSync.connectRealtimeMatrix('tasks_data', (incomingPayload) => {
+        taskList = incomingPayload;
+        renderBoard();
+        updateGlobalMetrics();
+        localStorage.setItem('doyourtasksbro_data', JSON.stringify(taskList));
+    });
+
+    LiveSync.connectRealtimeMatrix('history_data', (incomingPayload) => {
+        taskHistory = incomingPayload;
+        renderHistory();
+        localStorage.setItem('doyourtasksbro_history', JSON.stringify(taskHistory));
+    });
+});
 
 taskInput.addEventListener('input', () => {
     const currentTextLength = taskInput.value.length;
     liveCounter.textContent = currentTextLength;
 });
 
-
-taskForm.addEventListener('submit', (e) => {
+taskForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const cleanText = taskInput.value.trim();
 
-    if (cleanText.length === 0) {
-        return;
-    }
+    if (cleanText.length === 0) return;
 
     const taskObject = {
         id: Date.now(),
@@ -71,40 +91,29 @@ taskForm.addEventListener('submit', (e) => {
         deadline: taskDeadline.value
     };
 
-    taskList.push(taskObject); // pushing a variable to the global array
+    taskList.push(taskObject); 
     
-    renderBoard(); // call to render
-    
+    renderBoard(); 
     taskInput.value = '';
     taskDeadline.value = '';
     liveCounter.textContent = 0;
 
-    updateGlobalMetrics(); // update the global metrics
-
-    console.log(taskList);
-
-    saveData();
+    updateGlobalMetrics();
+    saveAndSyncData();
 });
 
-
-function renderBoard() { // function declaration
+function renderBoard() { 
     taskList.sort((a, b) => {
-        if (a.deadline === '' && b.deadline === '') {
-            return 0;
-        }
-        if (a.deadline === '') {
-            return 1;
-        }
-        if (b.deadline === '') {
-            return -1;
-        }
+        if (a.deadline === '' && b.deadline === '') return 0;
+        if (a.deadline === '') return 1;
+        if (b.deadline === '') return -1;
         return new Date(a.deadline) - new Date(b.deadline);
     });
 
-    gravityBoard.innerHTML = ''; // clear the board before rendering
+    gravityBoard.innerHTML = ''; 
 
     taskList.forEach(task => {
-        const card = document.createElement('div'); //parent
+        const card = document.createElement('div'); 
         card.classList.add('card');
 
         if (task.weight < 100) {
@@ -117,7 +126,7 @@ function renderBoard() { // function declaration
 
         const taskText = document.createElement('p');
         taskText.textContent = task.text;
-        card.appendChild(taskText); // append the task text to the card
+        card.appendChild(taskText); 
 
         const cardFooter = document.createElement('div');
         cardFooter.classList.add('card-footer');
@@ -128,6 +137,7 @@ function renderBoard() { // function declaration
             deadline.classList.add('card-deadline');
             cardFooter.appendChild(deadline);
         }
+        
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'Done';
         deleteBtn.classList.add('delete-btn');
@@ -135,34 +145,23 @@ function renderBoard() { // function declaration
             task.completedAt = Date.now();
             taskHistory.push(task);
 
-            taskList = taskList.filter(taskItem => taskItem.id !== task.id); //remove task from the array
-            renderBoard(); // re-render :)
+            taskList = taskList.filter(taskItem => taskItem.id !== task.id); 
+            renderBoard(); 
             updateGlobalMetrics();
-            saveData();
-            localStorage.setItem('doyourtasksbro_history', JSON.stringify(taskHistory));
+            saveAndSyncData();
             renderHistory();
         });        
         cardFooter.appendChild(deleteBtn);
         card.appendChild(cardFooter);
-
         card.style.setProperty('--card-weight', task.weight); 
 
         gravityBoard.appendChild(card);
     });
 }
 
-
-renderBoard(); // clear any placeholder
-updateGlobalMetrics();
-renderHistory();
-
-
 function updateGlobalMetrics() {
     let totalScore = 0;
-
-    taskList.forEach(task => {
-        totalScore += task.weight;
-    });
+    taskList.forEach(task => { totalScore += task.weight; });
     scoreNum.textContent = totalScore;
 
     if (totalScore < warningThreshold) {
@@ -179,23 +178,16 @@ function updateGlobalMetrics() {
         document.body.classList.remove('theme-safe', 'theme-warning');
         document.body.classList.add('theme-overload');
         taskAdd.disabled = true;
-        taskInput.disabled = true
+        taskInput.disabled = true;
     }
-
 }
 
+function saveAndSyncData() {
+    localStorage.setItem('doyourtasksbro_data', JSON.stringify(taskList));
+    localStorage.setItem('doyourtasksbro_history', JSON.stringify(taskHistory));
 
-function saveData() {
-    const stringifiedVar = JSON.stringify(taskList);
-    localStorage.setItem('doyourtasksbro_data', stringifiedVar);
-
-    const rawStorage = localStorage.getItem('doyourtasksbro_data');
-    const allStoredItems = rawStorage ? JSON.parse(rawStorage) : [];
-
-    const calendarEventsOnly = allStoredItems.filter(item => item.tag !== undefined);
-    const combinedDataCollection = [...calendarEventsOnly, ...taskList];
-
-    localStorage.setItem('doyourtasksbro_data', JSON.stringify(combinedDataCollection));
+    LiveSync.pushData('tasks_data', taskList);
+    LiveSync.pushData('history_data', taskHistory);
 }
 
 function renderHistory() {
@@ -214,7 +206,6 @@ tabTodo.addEventListener('click', () => {
     todoView.classList.remove('hidden');
     gravityBoard.classList.remove('hidden');
     historyView.classList.add('hidden');
-
     tabTodo.classList.add('active');
     gravityBoard.classList.add('active');
     tabHistory.classList.remove('active');
@@ -224,28 +215,26 @@ tabHistory.addEventListener('click', () => {
     historyView.classList.remove('hidden');
     todoView.classList.add('hidden');
     gravityBoard.classList.add('hidden');
-
     tabHistory.classList.add('active');
     tabTodo.classList.remove('active');
     gravityBoard.classList.remove('active');
 });
 
-// --- Global Theme Toggle ---
-const themeToggle = document.getElementById('theme-toggle');
-
-if (localStorage.getItem('theme') === 'light') {
-    document.body.classList.add('light-mode');
-    if (themeToggle) themeToggle.checked = true;
-}
-
-if (themeToggle) {
-    themeToggle.addEventListener('change', () => {
-        if (themeToggle.checked) {
-            document.body.classList.add('light-mode');
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.body.classList.remove('light-mode');
-            localStorage.setItem('theme', 'dark');
-        }
-    });
+function initThemeState() {
+    const themeToggle = document.getElementById('theme-toggle');
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        if (themeToggle) themeToggle.checked = true;
+    }
+    if (themeToggle) {
+        themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+                document.body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.remove('light-mode');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    }
 }

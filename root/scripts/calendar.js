@@ -1,15 +1,15 @@
+let savedTasks = [];
+
 function getMonthMetadata(year, month) {
     const firstDayIndex = new Date(year, month, 1).getDay();
     const totalDays = new Date(year, month + 1, 0).getDate();
-
     return { firstDayIndex, totalDays };
 }
 
 function formatSystemDate(year, month, day) {
     const stringMonth = String(month + 1).padStart(2, '0');
     const stringDay = String(day).padStart(2, '0');
-    const stringDate = `${year}-${stringMonth}-${stringDay}`;
-    return stringDate;
+    return `${year}-${stringMonth}-${stringDay}`;
 }
 
 function evaluateDayLoad(taskList, targetDate) {
@@ -21,9 +21,7 @@ function evaluateDayLoad(taskList, targetDate) {
     });
 
     const storedWarn = localStorage.getItem('todo_warn_threshold');
-    const storedOverload = localStorage.getItem('todo_overload_threshold');
     const warningLimit = storedWarn !== null ? Number(storedWarn) : 300;
-    const overloadLimit = storedOverload !== null ? Number(storedOverload) : 600;
 
     let threatTier = "safe";
 
@@ -38,7 +36,6 @@ function evaluateDayLoad(taskList, targetDate) {
     return { matchedTasks, threatTier };
 }
 
-// to fetch the color of the event in the calendar
 function getTagColor(tagName) {
     const storedTags = JSON.parse(localStorage.getItem("doyourtasksbro_tags"));
     const tagList = storedTags || [
@@ -100,14 +97,17 @@ function renderCalendarGrid(displayDate, taskList) {
                     deleteBtn.innerHTML = '&times;';
                     deleteBtn.title = 'Delete Event';
                     
-                    deleteBtn.addEventListener('click', (e) => {
+                    deleteBtn.addEventListener('click', async (e) => {
                         e.stopPropagation();
                         
                         const masterIndex = taskList.findIndex(t => t.text === item.text && t.deadline === item.deadline && t.tag === item.tag);
                         
                         if (masterIndex !== -1) {
                             taskList.splice(masterIndex, 1);
+                            
+                            // Propagate changes globally straight back up to database pipelines
                             localStorage.setItem('doyourtasksbro_data', JSON.stringify(taskList));
+                            await LiveSync.pushData('tasks_data', taskList);
                             
                             renderCalendarGrid(displayDate, taskList);
                             updateBriefingDeck(targetDateString);
@@ -128,7 +128,6 @@ function renderCalendarGrid(displayDate, taskList) {
         }
     }
 
-    // MAIN CALENDAR GRID RENDER ENGINE
     for (let i = 0; i < firstDayIndex; i++) {
         const emptyCell = document.createElement('div');
         emptyCell.classList.add('calendar-day', 'empty');
@@ -163,7 +162,6 @@ function renderCalendarGrid(displayDate, taskList) {
         dayNumLabel.textContent = day;
         headerRow.appendChild(dayNumLabel);
 
-        // Render workload dot
         if (dailyTasks.length > 0) {
             const dotContainer = document.createElement('div');
             dotContainer.classList.add('dot-container');
@@ -177,7 +175,6 @@ function renderCalendarGrid(displayDate, taskList) {
 
         dayCell.appendChild(headerRow);
         
-        // Render event ribbon
         if (dailyEvents.length > 0) {
             if (dailyEvents.length <= 2) {
                 dailyEvents.forEach(eventItem => {
@@ -219,7 +216,6 @@ function renderCalendarGrid(displayDate, taskList) {
             }
         }
 
-        // Click Event listener
         dayCell.addEventListener('click', () => {
             document.querySelectorAll('.calendar-day.selected').forEach(el => {
                 el.classList.remove('selected');
@@ -234,7 +230,6 @@ function renderCalendarGrid(displayDate, taskList) {
         calendarGrid.appendChild(dayCell);
     }
 
-    // MINI SIDEBAR CALENDAR RENDER ENGINE
     const miniCalendarGrid = document.getElementById('mini-calendar-grid');
     miniCalendarGrid.innerHTML = '';
 
@@ -277,15 +272,28 @@ function renderCalendarGrid(displayDate, taskList) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     let currentViewDate = new Date();
-    const savedTasks = JSON.parse(localStorage.getItem("doyourtasksbro_data")) || [];
+    
+    console.log("[BOOT] Loading Cloud Radar Grid Vectors...");
+    const cloudTasks = await LiveSync.pullData('tasks_data');
+
+    if (cloudTasks !== null) {
+        savedTasks = cloudTasks;
+    } else {
+        savedTasks = JSON.parse(localStorage.getItem("doyourtasksbro_data")) || [];
+    }
 
     renderCalendarGrid(currentViewDate, savedTasks);
 
+    LiveSync.connectRealtimeMatrix('tasks_data', (incomingPayload) => {
+        savedTasks = incomingPayload;
+        renderCalendarGrid(currentViewDate, savedTasks);
+        localStorage.setItem('doyourtasksbro_data', JSON.stringify(savedTasks));
+    });
+
     const prevBtn = document.getElementById("prev-month-btn");
     const nextBtn = document.getElementById("next-month-btn");
-
     const miniButtons = document.querySelectorAll('.mini-calendar-nav-controls .mini-nav-btn');
 
     if (miniButtons.length >= 2) {
@@ -313,13 +321,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function fetchTagCollection() {
         const storedTags = JSON.parse(localStorage.getItem("doyourtasksbro_tags"));
-
         if (storedTags === null) {
             const defaultTags = [
                 { id: "tag-1", name: "Exam", color: "#FF9800" },
                 { id: "tag-2", name: "Birthday", color: "#E91E63"}
             ];
-
             localStorage.setItem("doyourtasksbro_tags", JSON.stringify(defaultTags));
             return defaultTags;
         }
@@ -334,14 +340,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const option = document.createElement('option');
             option.text = tag.name;
             option.value = tag.name;
-
             selectTags.appendChild(option);
         });
 
         const newTagOption = document.createElement('option');
         newTagOption.value = 'new';
         newTagOption.text = '+ Create New Tag';
-        
         selectTags.appendChild(newTagOption);
     }
     dropDownMenu();
@@ -349,7 +353,6 @@ document.addEventListener("DOMContentLoaded", () => {
     selectTags.addEventListener('change', () => {
         const tagValues = selectTags.value;
         const tagInputs = document.querySelector('.custom-tag-inputs');
-
         if (tagValues === 'new') {
             tagInputs.classList.remove('hidden');
         } else {
@@ -365,7 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
         eventModal.classList.add('hidden');
     });
     
-    saveBtn.addEventListener('click', (event) => {
+    saveBtn.addEventListener('click', async (event) => {
         event.preventDefault();
         let finalTagName = "";
         const customTagName = document.querySelector('.custom-tag-name');
@@ -374,15 +377,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (tagValues === 'new') {
             finalTagName = customTagName.value;
-
             const newTag = {
                 name: customTagName.value,
                 color: customTagColor.value
             };
-
             const currentTags = fetchTagCollection();
             currentTags.push(newTag);
-
             localStorage.setItem('doyourtasksbro_tags', JSON.stringify(currentTags));
             dropDownMenu();
         } else {
@@ -395,7 +395,9 @@ document.addEventListener("DOMContentLoaded", () => {
             tag: finalTagName
         }
         savedTasks.push(newEventObj);
+        
         localStorage.setItem('doyourtasksbro_data', JSON.stringify(savedTasks));
+        await LiveSync.pushData('tasks_data', savedTasks);
 
         eventModal.classList.add('hidden');
         eventTitle.value = '';

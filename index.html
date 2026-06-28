@@ -6,7 +6,10 @@
     <title>DoYourTasksBro</title>
     <link rel="stylesheet" href="root/css/style.css">
     <link rel="stylesheet" href="root/css/home.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script href="root/scripts/sync.js" src="root/scripts/sync.js" defer></script>
     <script src="root/scripts/app.js" defer></script>
+    <script src="root/scripts/home.js" defer></script>
 </head>
 <body>
     <script>
@@ -92,7 +95,7 @@
                     <h4>TODO ENGINE</h4>
                 </div>
                 <p>Captures incoming commitments, stamps targets, and routes completed logs directly down to historical archival tracks.</p>
-                <div class="node-metric">STATUS: ACTIVE</div>
+                <div class="node-metric" id="home-todo-metric">LOAD: 0 PT</div>
             </div>
 
             <div class="status-node">

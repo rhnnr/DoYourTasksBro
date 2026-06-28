@@ -5,16 +5,14 @@ const blockLabel = document.getElementById('block-label');
 const blockDay = document.getElementById('block-day');
 const blockStart = document.getElementById('block-start');
 const blockEnd = document.getElementById('block-end');
-const timetableData = localStorage.getItem('timetable-data');
 
-const toggleButton = document.getElementById('toggle-btn')
-const sideBar = document.getElementById('sidebar')
+const toggleButton = document.getElementById('toggle-btn');
+const sideBar = document.getElementById('sidebar');
 
 if(localStorage.getItem('sidebar_closed') === 'true') {
     sideBar.classList.add('close');
-    toggleButton.classList.add('rotate')
+    toggleButton.classList.add('rotate');
 }
-
 
 function toggleSidebar() {
     const isClosed = sideBar.classList.toggle('close');
@@ -22,19 +20,32 @@ function toggleSidebar() {
     localStorage.setItem('sidebar_closed', isClosed);
 }
 
-
-if (timetableData !== null) {
-    globalSchedule = JSON.parse(timetableData);
-} else {
-    globalSchedule = [];
-}
-
-// just learned it 2:53 AM 6/19/2026
 const timeStringtoMinute = (timeString) => {
     return timeString.split(":").reduce((h, m) => h * 60 + Number(m), 0);
 }
 
-// "submit" is the event the short for function ()=>{ inside here is what the unamed function do}
+document.addEventListener("DOMContentLoaded", async () => {
+    initThemeState();
+
+    console.log("[BOOT] Pulling Timetable Matrix from Supabase...");
+    const cloudTimetable = await LiveSync.pullData('timetable_data');
+
+    if (cloudTimetable !== null) {
+        globalSchedule = cloudTimetable;
+    } else {
+        const timetableData = localStorage.getItem('timetable-data');
+        globalSchedule = timetableData !== null ? JSON.parse(timetableData) : [];
+    }
+
+    renderMatrix();
+
+    LiveSync.connectRealtimeMatrix('timetable_data', (incomingPayload) => {
+        globalSchedule = incomingPayload;
+        renderMatrix();
+        localStorage.setItem('timetable-data', JSON.stringify(globalSchedule));
+    });
+});
+
 scheduleForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const schedLabel = blockLabel.value;
@@ -67,22 +78,22 @@ scheduleForm.addEventListener("submit", (event) => {
         globalSchedule.push(scheduleObjects);
     });
     
-    localStorage.setItem('timetable-data', JSON.stringify(globalSchedule));
-
     document.querySelectorAll('#block-day input[type="checkbox"]').forEach(cb => cb.checked = false);
     blockLabel.value = '';
     blockStart.value = '';
     blockEnd.value = '';
 
-    renderMatrix()
+    renderMatrix();
+    saveAndSyncTimetable();
 });
 
-function renderMatrix () {
+function renderMatrix() {
     const canvases = document.querySelectorAll('.track-canvas');
     canvases.forEach((canvas) => canvas.innerHTML = '');
 
     globalSchedule.forEach((schedule) => {
         const targetCanvas = document.querySelector(`#col-${schedule.day} .track-canvas`);
+        if (!targetCanvas) return;
         
         const topPos = timeStringtoMinute(schedule.start);
         const blockHeight = timeStringtoMinute(schedule.end) - topPos;
@@ -93,7 +104,7 @@ function renderMatrix () {
         cardBlueprint.style.height = `${blockHeight}px`;
 
         const cardDisplayText = document.createElement('span');
-        cardDisplayText.classList.add('card-text');
+        cardBlueprint.classList.add('card-text');
         cardDisplayText.textContent = schedule.label;
 
         const cardTime = document.createElement('span');
@@ -108,7 +119,7 @@ function renderMatrix () {
         cardDelete.addEventListener("click", () => {
             globalSchedule = globalSchedule.filter(item => item.id !== schedule.id);
             renderMatrix();
-            localStorage.setItem('timetable-data', JSON.stringify(globalSchedule));
+            saveAndSyncTimetable();
         });
         
         cardBlueprint.appendChild(cardDisplayText);
@@ -118,24 +129,26 @@ function renderMatrix () {
     });
 }
 
-renderMatrix();
-
-// --- Global Theme Toggle ---
-const themeToggle = document.getElementById('theme-toggle');
-
-if (localStorage.getItem('theme') === 'light') {
-    document.body.classList.add('light-mode');
-    if (themeToggle) themeToggle.checked = true;
+function saveAndSyncTimetable() {
+    localStorage.setItem('timetable-data', JSON.stringify(globalSchedule));
+    LiveSync.pushData('timetable_data', globalSchedule);
 }
 
-if (themeToggle) {
-    themeToggle.addEventListener('change', () => {
-        if (themeToggle.checked) {
-            document.body.classList.add('light-mode');
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.body.classList.remove('light-mode');
-            localStorage.setItem('theme', 'dark');
-        }
-    });
+function initThemeState() {
+    const themeToggle = document.getElementById('theme-toggle');
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        if (themeToggle) themeToggle.checked = true;
+    }
+    if (themeToggle) {
+        themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+                document.body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.remove('light-mode');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    }
 }
